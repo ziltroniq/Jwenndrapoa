@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=5.0, viewport-fit=cover">
+  <title>Jwenn Drapo a 🇭🇹 – 10 000 HTG</title>
+
+  <!-- Balises Open Graph pour l'aperçu WhatsApp -->
+  <meta property="og:title" content="Jwenn Drapo a 🇭🇹 – Gagne 10 000 Gourdes">
+  <meta property="og:description" content="Trouve le drapeau caché et remporte le grand prix ! Événement du 18 mai.">
+  <meta property="og:image" content="https://via.placeholder.com/1200x630/00209F/D21034?text=Jwenn+Drapo+a+10+000+HTG">
+  <meta property="og:url" content="https://TON-UTILISATEUR.github.io/jwenn-drapo-a/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <style>
+    /* ========== BASE & VARIABLES ========== */
+    :root {
+      --bg: #0a0a14;
+      --surface: #141428;
+      --neon-green: #39ff14;
+      --neon-pink: #ff44cc;
+      --neon-blue: #00d4ff;
+      --neon-red: #ff3131;
+      --gold: #ffd700;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: #eee;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #app {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 15px;
+      position: relative;
+      background: var(--surface);
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(0,212,255,0.3);
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      text-align: center;
+      font-weight: 900;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, var(--neon-green), var(--neon-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 10px 0;
+    }
+    .subtitle {
+      text-align: center;
+      color: var(--neon-pink);
+      font-weight: bold;
+      font-size: 1.2rem;
+      text-shadow: 0 0 8px var(--neon-pink);
+      margin-bottom: 1rem;
+    }
+
+    /* ========== BOUTONS ========== */
+    .btn-primary {
+      display: block;
+      width: 100%;
+      background: linear-gradient(135deg, #ff3131, #ff8c00);
+      color: white;
+      border: none;
+      font-size: 1.5rem;
+      font-weight: bold;
+      padding: 16px;
+      border-radius: 50px;
+      margin: 20px 0;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(255,49,49,0.6);
+      transition: 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .btn-primary:active {
+      transform: scale(0.96);
+      box-shadow: 0 0 30px rgba(255,49,49,0.9);
+    }
+    .btn-share {
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      color: white;
+      border: none;
+      font-weight: bold;
+      padding: 14px;
+      border-radius: 50px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      width: 100%;
+      margin: 10px 0;
+      box-shadow: 0 0 15px #25D366;
+    }
+    .btn-small {
+      background: var(--neon-blue);
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 12px var(--neon-blue);
+    }
+
+    /* ========== COMPTE À REBOURS ========== */
+    #countdown-box {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--neon-pink);
+      border-radius: 15px;
+      padding: 15px;
+      text-align: center;
+      margin: 15px 0;
+      backdrop-filter: blur(5px);
+    }
+    #countdown {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--gold);
+      text-shadow: 0 0 10px var(--gold);
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    #countdown span {
+      background: #000;
+      padding: 8px 12px;
+      border-radius: 10px;
+      min-width: 50px;
+    }
+
+    /* ========== LEADERBOARD FAKE ========== */
+    #leaderboard {
+      background: rgba(0,0,0,0.4);
+      border-radius: 15px;
+      padding: 10px;
+      margin: 15px 0;
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid var(--neon-blue);
+    }
+    #leaderboard h2 {
+      color: var(--neon-green);
+      margin-bottom: 8px;
+      font-size: 1.2rem;
+    }
+    .leader-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .winner {
+      color: var(--gold);
+      font-weight: bold;
+    }
+
+    /* ========== ÉCRAN DE JEU (vue aérienne néon) ========== */
+    #game-screen {
+      display: flex;
+      flex-direction: column;
+      height: 80vh;
+      height: 80dvh;
+    }
+    #game-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+    }
+    #timer {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: var(--neon-blue);
+      text-shadow: 0 0 8px var(--neon-blue);
+    }
+    #game-area {
+      flex: 1;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      background: radial-gradient(circle at 50% 50%, #0a1a0a, #000000);
+      border-radius: 16px;
+      border: 2px solid var(--neon-green);
+      position: relative;
+    }
+    #game-grid {
+      display: grid;
+      grid-template-columns: repeat(25, 80px);
+      grid-template-rows: repeat(25, 80px);
+      width: 2000px;
+      height: 2000px;
+    }
+    .tree-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      filter: drop-shadow(0 0 6px currentColor);
+      animation: treeGlow 2s infinite alternate;
+    }
+    @keyframes treeGlow {
+      0% { filter: drop-shadow(0 0 4px currentColor); }
+      100% { filter: drop-shadow(0 0 14px currentColor); }
+    }
+
+    .game-hint {
+      text-align: center;
+      padding: 8px;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+
+    /* ========== CARTE DE DÉFAITE ========== */
+    .defeat-card {
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      margin: 20px 0;
+      border: 1px solid var(--neon-red);
+      box-shadow: 0 0 20px rgba(255,49,49,0.4);
+    }
+    .defeat-card h2 {
+      color: var(--neon-red);
+    }
+    .points {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--gold);
+      text-shadow: 0 0 15px var(--gold);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* ========== ANIMATIONS ========== */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <!-- ========== ÉCRAN D'ACCUEIL ========== -->
+  <div id="home-screen">
+    <h1>Jwenn Drapo a 🇭🇹</h1>
+    <div class="subtitle">GRAND PRIX 10 000 HTG</div>
+
+    <!-- Compte à rebours -->
+    <div id="countdown-box">
+      <p>⏳ L'événement se termine dans :</p>
+      <div id="countdown">
+        <span id="cd-days">00</span>J
+        <span id="cd-hours">00</span>H
+        <span id="cd-mins">00</span>M
+        <span id="cd-secs">00</span>S
+      </div>
+    </div>
+
+    <!-- Faux classement des joueurs -->
+    <div id="leaderboard">
+      <h2>🏆 Derniers joueurs</h2>
+      <div id="leader-list"></div>
+    </div>
+
+    <button id="start-btn" class="btn-primary pulse">🔍 Commencer à chercher</button>
+
+    <!-- Bannière Adsterra toujours visible -->
+    <div style="text-align: center; margin: 15px 0;">
+      <script>
+        atOptions = {
+          'key' : 'bfa34ea21f0dd2c4048fdf4cf8ddf94e',
+          'format' : 'iframe',
+          'height' : 250,
+          'width' : 300,
+          'params' : {}
+        };
+      </script>
+      <script src="https://penguinsincequalify.com/bfa34ea21f0dd2c4048fdf4cf8ddf94e/invoke.js"></script>
+    </div>
+  </div>
+
+  <!-- ========== ÉCRAN DE JEU ========== -->
+  <div id="game-screen" class="hidden">
+    <div id="game-header">
+      <span id="timer">⏱️ 03:00</span>
+      <button id="abandon-btn" class="btn-small">🏳️ Abandonner</button>
+    </div>
+    <div id="game-area">
+      <div id="game-grid"></div>
+    </div>
+    <p class="game-hint">🔍 Zoomez et cherchez le drapeau lumineux 🇭🇹</p>
+  </div>
+
+  <!-- ========== CARTE DE DÉFAITE (affichée après abandon ou temps écoulé) ========== -->
+  <div id="defeat-card" class="defeat-card hidden">
+    <h2>😞 Temps écoulé ou abandon</h2>
+    <p>Temps : <span id="defeat-time"></span></p>
+    <p>Points gagnés : <span class="points" id="defeat-points"></span></p>
+    <!-- AD NATIVE -->
+    <div style="margin: 15px 0;">
+      <script async="async" data-cfasync="false" src="https://penguinsincequalify.com/623647ad2d51b4896cf878366ccdd192/invoke.js"></script>
+      <div id="container-623647ad2d51b4896cf878366ccdd192"></div>
+    </div>
+    <button id="retry-btn" class="btn-primary">🔄 Réessayer</button>
+    <button id="share-defeat-btn" class="btn-share">📤 Partager sur WhatsApp</button>
+  </div>
+
+  <!-- ========== GAME OVER (5 tentatives épuisées) ========== -->
+  <div id="gameover-screen" class="hidden">
+    <h2 style="color: var(--neon-red); text-align:center;">😔 Partie terminée</h2>
+    <p style="text-align:center;">Vos 5 chances sont épuisées. Revenez l'année prochaine !</p>
+    <div style="margin: 20px auto; max-width:300px;">
+      <!-- Bannière fixe déjà chargée, mais on peut la dupliquer ici si souhaité -->
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ==================== CONFIGURATION ====================
+    const MAX_ATTEMPTS = 5;
+    const GAME_DURATION = 180; // secondes (3 minutes)
+    const SECRET_KEY = "HAITI1805";
+    const WHATSAPP_NUMBER = "509XXXXXXXX"; // ← Remplacez par le vrai numéro
+    const EVENT_END_DATE = new Date('2026-05-18T23:59:59-05:00'); // Heure Haïti
+
+    // ==================== FONCTIONS DE STOCKAGE SÉCURISÉ ====================
+    function simpleHash(str) {
+      let hash = 5381;
+      for (let i = 0; i < str.length; i++) {
+        hash = (hash * 33) ^ str.charCodeAt(i);
+      }
+      return (hash >>> 0).toString(16).toUpperCase().padStart(8, '0');
+    }
+    function shortHash(str, len = 4) {
+      return simpleHash(str).slice(0, len);
+    }
+    function secureSet(key, valueObj) {
+      const json = JSON.stringify(valueObj);
+      const checksum = simpleHash(json + SECRET_KEY);
+      const payload = { d: json, h: checksum };
+      localStorage.setItem(key, btoa(JSON.stringify(payload)));
+    }
+    function secureGet(key) {
+      const raw = localStorage.getItem(key);
+      if (!raw) return null;
+      try {
+        const payload = JSON.parse(atob(raw));
+        const expected = simpleHash(payload.d + SECRET_KEY);
+        if (payload.h !== expected) {
+          localStorage.removeItem(key);
+          return null;
+        }
+        return JSON.parse(payload.d);
+      } catch (e) {
+        localStorage.removeItem(key);
+        return null;
+      }
+    }
+    function getAttempts() {
+      const data = secureGet('jwennDrapoAttempts');
+      return data ? data.count : 0;
+    }
+    function setAttempts(count) {
+      secureSet('jwennDrapoAttempts', { count });
+    }
+    function incrementAttempts() {
+      let count = getAttempts();
+      if (count >= MAX_ATTEMPTS) return false;
+      count++;
+      setAttempts(count);
+      return true;
+    }
+    function isGameLocked() {
+      return getAttempts() >= MAX_ATTEMPTS;
+    }
+
+    // ==================== COMPTE À REBOURS ====================
+    function updateCountdown() {
+      const now = new Date();
+      const diff = EVENT_END_DATE - now;
+      if (diff <= 0) {
+        document.getElementById('cd-days').textContent = '00';
+        document.getElementById('cd-hours').textContent = '00';
+        document.getElementById('cd-mins').textContent = '00';
+        document.getElementById('cd-secs').textContent = '00';
+        return;
+      }
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const mins = Math.floor((diff / (1000 * 60)) % 60);
+      const secs = Math.floor((diff / 1000) % 60);
+      document.getElementById('cd-days').textContent = String(days).padStart(2,'0');
+      document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
+      document.getElementById('cd-mins').textContent = String(mins).padStart(2,'0');
+      document.getElementById('cd-secs').textContent = String(secs).padStart(2,'0');
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // ==================== FAKE LEADERBOARD ====================
+    function buildFakeLeaderboard() {
+      const names = [
+        "Jean R.", "Michaëlle C.", "Pierre L.", "Magalie T.", "Frantz D.",
+        "Rose M.", "Ricardo A.", "Sophie P.", "Davidson F.", "Nathalie B.",
+        "Marc K.", "Claudine J.", "Emmanuel S.", "Fabienne G.", "Steeve R.",
+        "Chantal V.", "Kensley H.", "Wildine E.", "Marc-Andy Z.", "Youseline O."
+      ];
+      const list = document.getElementById('leader-list');
+      let html = '';
+      for (let i = 1; i <= 200; i++) {
+        const name = names[Math.floor(Math.random() * names.length)] + (i%10);
+        const games = Math.floor(Math.random() * 5) + 1;
+        const won = (i <= 3) ? true : false; // 3 faux gagnants
+        if (won) {
+          html += `<div class="leader-item winner">🏆 ${name} – ${games} parties – <b>GAGNÉ</b></div>`;
+        } else {
+          html += `<div class="leader-item">😞 ${name} – ${games} parties – perdu</div>`;
+        }
+      }
+      list.innerHTML = html;
+    }
+    buildFakeLeaderboard();
+
+    // ==================== POPUNDER (max 5) ====================
+    let popunderCount = 0;
+    function triggerPopunder() {
+      if (popunderCount >= 5) return;
+      popunderCount++;
+      const script = document.createElement('script');
+      script.src = "https://penguinsincequalify.com/13/4b/19/134b1970caa33d9d8228aebf165e4d10.js";
+      document.body.appendChild(script);
+    }
+
+    // ==================== JEU ====================
+    const GRID_SIZE = 25;
+    const CELL_SIZE = 80;
+    const TREES = ['🌲','🌳','🌿','🍃','🌱','🌴','🎋','🍀','🌵','🍂'];
+    const NEON_COLORS = [
+      '#39ff14', '#ff44cc', '#00d4ff', '#ff3131', '#ffd700', '#bc13fe'
+    ];
+
+    let currentAttempt = 0;
+    let gameTimerInterval = null;
+    let gameTimeout = null; // pour fin automatique
+    let startTime = null;
+    let remainingSeconds = GAME_DURATION;
+
+    function showScreen(screenId) {
+      document.querySelectorAll('#home-screen, #game-screen, #defeat-card, #gameover-screen')
+        .forEach(el => el.classList.add('hidden'));
+      if (screenId) document.getElementById(screenId).classList.remove('hidden');
+    }
+
+    function generateGrid() {
+      const grid = document.getElementById('game-grid');
+      grid.innerHTML = '';
+      for (let i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'tree-cell';
+        cell.textContent = TREES[Math.floor(Math.random() * TREES.length)];
+        cell.style.color = NEON_COLORS[Math.floor(Math.random() * NEON_COLORS.length)];
+        cell.style.fontSize = (28 + Math.random() * 20) + 'px';
+        cell.style.animationDelay = Math.random() * 2 + 's';
+        grid.appendChild(cell);
+      }
+      // Pas de drapeau – personne ne gagne
+    }
+
+    function startGame() {
+      if (isGameLocked()) {
+        showScreen('gameover-screen');
+        return;
+      }
+      const incremented = incrementAttempts();
+      if (!incremented) {
+        showScreen('gameover-screen');
+        return;
+      }
+      currentAttempt = getAttempts();
+      generateGrid();
+      startTime = Date.now();
+      remainingSeconds = GAME_DURATION;
+      updateTimerDisplay();
+      gameTimerInterval = setInterval(updateTimerDisplay, 1000);
+      // Fin automatique après GAME_DURATION secondes
+      gameTimeout = setTimeout(() => {
+        abandonGame(true); // true pour indiquer temps écoulé
+      }, GAME_DURATION * 1000);
+      showScreen('game-screen');
+      document.getElementById('game-area').scrollTo(0, 0);
+    }
+
+    function updateTimerDisplay() {
+      if (!startTime) return;
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      remainingSeconds = Math.max(0, GAME_DURATION - elapsed);
+      const mins = Math.floor(remainingSeconds / 60).toString().padStart(2, '0');
+      const secs = (remainingSeconds % 60).toString().padStart(2, '0');
+      document.getElementById('timer').textContent = `⏱️ ${mins}:${secs}`;
+    }
+
+    function stopTimers() {
+      if (gameTimerInterval) {
+        clearInterval(gameTimerInterval);
+        gameTimerInterval = null;
+      }
+      if (gameTimeout) {
+        clearTimeout(gameTimeout);
+        gameTimeout = null;
+      }
+    }
+
+    function abandonGame(timeUp = false) {
+      stopTimers();
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      // Points fictifs basés sur le temps (plus c'est court, plus de points ? ou aléatoire)
+      const points = timeUp ? 
+        Math.floor(Math.random() * 300) + 50 : 
+        Math.floor(Math.random() * 500) + 100;
+      document.getElementById('defeat-time').textContent = elapsed + ' secondes';
+      document.getElementById('defeat-points').textContent = points;
+
+      // Historique local
+      let history = secureGet('jwennDrapoHistory');
+      if (!history) history = [];
+      history.push({ attempt: currentAttempt, time: elapsed, points });
+      secureSet('jwennDrapoHistory', history);
+
+      // Déclencher popunder
+      triggerPopunder();
+
+      showScreen('defeat-card');
+    }
+
+    // ==================== ÉVÉNEMENTS ====================
+    document.getElementById('start-btn').addEventListener('click', startGame);
+    document.getElementById('abandon-btn').addEventListener('click', () => abandonGame(false));
+
+    document.getElementById('retry-btn').addEventListener('click', function() {
+      if (isGameLocked()) {
+        showScreen('gameover-screen');
+        return;
+      }
+      startGame();
+    });
+
+    // Partage WhatsApp (défaite)
+    document.getElementById('share-defeat-btn').addEventListener('click', function() {
+      const text = encodeURIComponent("🇭🇹 Je viens de perdre au jeu Jwenn Drapo a ! Peux-tu trouver le drapeau et gagner 10 000 HTG ? Joue ici : https://TON-UTILISATEUR.github.io/jwenn-drapo-a/");
+      window.open(`https://wa.me/?text=${text}`, '_blank');
+    });
+
+    // Initialisation
+    if (isGameLocked()) {
+      showScreen('gameover-screen');
+    } else {
+      showScreen('home-screen');
+    }
+  })();
+</script>
+</body>
+</html>
