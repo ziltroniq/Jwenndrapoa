@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=5.0, viewport-fit=cover">
   <title>Jwenn Drapo a 🇭🇹 – 10 000 HTG</title>
 
-  <!-- Open Graph -->
+  <!-- Open Graph (remplacez l'image par la vôtre sur ImgBB) -->
   <meta property="og:title" content="Jwenn Drapo a 🇭🇹 – Gagne 10 000 Gourdes">
   <meta property="og:description" content="Trouve le drapeau caché et remporte le grand prix ! Événement du 18 mai.">
   <meta property="og:image" content="https://i.ibb.co/VotreImage/apercu.jpg">
@@ -14,20 +14,23 @@
   <meta name="twitter:card" content="summary_large_image">
 
   <style>
-    /* ========== RESET & BASE ========== */
+    /* ========== MODERN RESET & BASE ========== */
     :root {
       --bleu: #00209F;
       --rouge: #D21034;
       --vert: #2E7D32;
       --jaune: #FFC107;
       --bg: #0a0a14;
-      --surface: #141428;
+      --surface: rgba(20, 20, 40, 0.7);
+      --glass: rgba(255, 255, 255, 0.05);
       --neon-green: #39ff14;
       --neon-pink: #ff44cc;
       --neon-blue: #00d4ff;
       --gold: #ffd700;
       --text: #eee;
-      --bar-bg: #1a1a2e;
+      --bar-bg: rgba(26, 26, 46, 0.8);
+      --radius: clamp(12px, 3vw, 20px);
+      --safe-bottom: env(safe-area-inset-bottom, 10px);
     }
     * { margin:0; padding:0; box-sizing:border-box; }
     html, body {
@@ -35,45 +38,45 @@
       height: 100%;
       background: var(--bg);
       overflow: hidden;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
     body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      color: var(--text);
       display: flex;
       justify-content: center;
       align-items: center;
+      color: var(--text);
     }
 
-    /* ========== CONTENEUR PRINCIPAL ========== */
+    /* Conteneur principal – pleine hauteur, responsive */
     #app {
       width: 100%;
       height: 100%;
       max-width: 500px;
       position: relative;
       background: var(--surface);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      box-shadow: 0 0 30px rgba(0,212,255,0.3);
-      border-radius: 20px 20px 0 0;
+      border-radius: var(--radius) var(--radius) 0 0;
+      box-shadow: 0 0 40px rgba(0,212,255,0.3);
     }
 
-    /* ========== ÉCRANS : TOUS CACHÉS PAR DÉFAUT ========== */
+    /* ========== ÉCRANS (cachés par défaut) ========== */
     .screen {
       flex: 1;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
-      padding: 15px;
-      padding-bottom: 80px; /* espace pour la bottom bar */
-      display: none; /* CACHÉ */
+      padding: clamp(10px, 3vw, 20px);
+      padding-bottom: calc(70px + var(--safe-bottom)); /* espace bottom bar */
+      display: none;
     }
-
-    /* Afficher UNIQUEMENT l'écran actif */
     .screen.active {
-      display: block; /* Par défaut en block, certains passent en flex via des règles plus spécifiques */
+      display: block;
     }
-
-    /* ========== ÉCRANS SPÉCIFIQUES EN FLEX (uniquement quand actifs) ========== */
+    /* Écrans utilisant flexbox */
     #screen-inscription.active {
       display: flex;
       flex-direction: column;
@@ -83,66 +86,107 @@
     #screen-jeu.active {
       display: flex;
       flex-direction: column;
-      padding: 0; /* Le jeu occupe tout l'espace sans padding */
+      padding: 0;
       padding-bottom: 0;
     }
-    #screen-defaite.active,
-    #screen-gameover.active,
-    #screen-accueil.active,
-    #screen-leaderboard.active,
-    #screen-profil.active {
-      display: block; /* Comportement standard */
-    }
 
-    /* ========== BOTTOM BAR ========== */
+    /* ========== BOTTOM BAR PREMIUM ========== */
     #bottom-bar {
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
       background: var(--bar-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       display: flex;
       justify-content: space-around;
-      padding: 8px 0;
-      border-top: 1px solid var(--neon-blue);
+      padding: 8px 0 var(--safe-bottom);
+      border-top: 1px solid rgba(255,255,255,0.15);
       z-index: 50;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
-      backdrop-filter: blur(10px);
       border-radius: 20px 20px 0 0;
     }
     .bar-btn {
       background: transparent;
       border: none;
       color: #aaa;
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       cursor: pointer;
-      transition: 0.2s;
+      transition: 0.25s;
+      padding: 5px 10px;
+      border-radius: 12px;
     }
-    .bar-btn.active { color: var(--neon-blue); text-shadow: 0 0 10px var(--neon-blue); }
-    .bar-btn span { font-size: 1.5rem; }
+    .bar-btn.active { 
+      color: var(--neon-blue); 
+      text-shadow: 0 0 10px var(--neon-blue);
+      background: rgba(255,255,255,0.05);
+    }
+    .bar-btn span { font-size: 1.6rem; }
 
-    /* ========== ÉLÉMENTS COMMUNS ========== */
+    /* ========== MODAL INSCRIPTION (glassmorphism) ========== */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-card {
+      background: var(--surface);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border-radius: var(--radius);
+      padding: clamp(20px, 5vw, 30px);
+      width: 90%;
+      max-width: 400px;
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      transform: scale(0.9);
+      transition: transform 0.3s;
+    }
+    .modal-overlay.active .modal-card {
+      transform: scale(1);
+    }
     .input-group {
       margin: 12px 0;
       text-align: left;
     }
     .input-group label {
       display: block;
-      margin-bottom: 4px;
-      font-weight: bold;
+      margin-bottom: 5px;
+      font-weight: 600;
       color: var(--neon-blue);
+      font-size: 0.9rem;
     }
     .input-group input, .input-group select {
       width: 100%;
       padding: 12px;
-      border-radius: 10px;
-      border: 1px solid #333;
-      background: #1a1a2e;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(0,0,0,0.4);
       color: white;
       font-size: 1rem;
+      outline: none;
+      backdrop-filter: blur(5px);
+      transition: border 0.2s;
+    }
+    .input-group input:focus, .input-group select:focus {
+      border-color: var(--neon-blue);
     }
     .btn-primary {
       display: block;
@@ -150,16 +194,18 @@
       background: linear-gradient(135deg, var(--rouge), #ff8c00);
       color: white;
       border: none;
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       font-weight: bold;
       padding: 14px;
       border-radius: 50px;
       margin: 15px 0;
       cursor: pointer;
-      box-shadow: 0 0 20px rgba(255,49,49,0.6);
+      box-shadow: 0 8px 20px rgba(255,49,49,0.4);
       transition: 0.2s;
       text-transform: uppercase;
       letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
     }
     .btn-primary:active { transform: scale(0.96); }
     .btn-share {
@@ -173,123 +219,173 @@
       cursor: pointer;
       width: 100%;
       margin: 10px 0;
-      box-shadow: 0 0 15px #25D366;
+      box-shadow: 0 8px 20px rgba(37,211,102,0.4);
     }
     .btn-small {
-      background: var(--neon-blue);
-      color: #000;
-      border: none;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.2);
       padding: 10px 20px;
       border-radius: 30px;
       font-weight: bold;
       cursor: pointer;
+      transition: 0.2s;
     }
+    .btn-small:hover { background: rgba(255,255,255,0.2); }
 
+    /* ========== COMPTE À REBOURS ========== */
     #countdown-box {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--neon-pink);
-      border-radius: 15px;
-      padding: 12px;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: var(--radius);
+      padding: clamp(10px, 3vw, 15px);
       text-align: center;
-      margin: 12px 0;
+      margin: 15px 0;
     }
     #countdown {
-      font-size: 1.8rem;
+      font-size: clamp(1.5rem, 5vw, 2rem);
       font-weight: bold;
       color: var(--gold);
-      text-shadow: 0 0 10px var(--gold);
       display: flex;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
+      text-shadow: 0 0 15px var(--gold);
     }
     #countdown span {
-      background: #000;
-      padding: 6px 10px;
-      border-radius: 8px;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(5px);
+      padding: 8px 12px;
+      border-radius: 10px;
+      min-width: 45px;
+      text-align: center;
     }
 
-    /* Leaderboard */
-    #leader-container {
-      max-height: 300px;
+    /* ========== LEADERBOARD ULTRA MODERNE ========== */
+    .leader-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 15px 0;
+      max-height: 400px;
       overflow-y: auto;
     }
-    .leader-table {
-      width: 100%;
-      border-collapse: collapse;
-      color: #ddd;
-      font-size: 0.8rem;
+    .player-row {
+      display: flex;
+      align-items: center;
+      background: var(--glass);
+      backdrop-filter: blur(8px);
+      border-radius: 14px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: transform 0.2s;
     }
-    .leader-table th {
-      background: #1a1a2e;
-      padding: 8px;
-      text-align: left;
+    .player-row.winner {
+      border-left: 4px solid var(--gold);
+    }
+    .rank {
       font-weight: bold;
+      width: 30px;
+      color: var(--neon-blue);
+    }
+    .crown {
+      margin-right: 4px;
+    }
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #555;
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: white;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, var(--neon-pink), var(--neon-blue));
+    }
+    .player-info {
+      flex: 1;
+    }
+    .player-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .player-score {
+      font-size: 0.8rem;
+      color: #aaa;
+    }
+    .status-badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    .status-win {
+      background: rgba(255,215,0,0.2);
       color: var(--gold);
     }
-    .leader-table td {
-      padding: 8px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-    .winner-row { background: rgba(255,215,0,0.1); }
-    .loser-row:nth-child(even) { background: rgba(255,255,255,0.03); }
-    .avatar-empty {
-      display: inline-block;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: #555;
-      margin-right: 6px;
-      vertical-align: middle;
+    .status-lose {
+      background: rgba(255,49,49,0.2);
+      color: #ff7e7e;
     }
 
-    /* Profil */
+    /* ========== PROFIL ========== */
     .profil-card {
-      background: var(--surface);
-      border-radius: 15px;
-      padding: 15px;
-      border: 1px solid var(--neon-blue);
+      background: var(--glass);
+      backdrop-filter: blur(15px);
+      border-radius: var(--radius);
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,0.15);
       margin-bottom: 15px;
-    }
-    .attempts-left {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: var(--neon-green);
-      text-shadow: 0 0 10px var(--neon-green);
+      text-align: center;
     }
     .empty-profile-icon {
-      width: 60px;
-      height: 60px;
+      width: 70px;
+      height: 70px;
       border-radius: 50%;
-      background: #555;
+      background: rgba(255,255,255,0.1);
       margin: 0 auto 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2rem;
+      font-size: 2.5rem;
       color: #aaa;
+      backdrop-filter: blur(5px);
+    }
+    .attempts-left {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: var(--neon-green);
+      text-shadow: 0 0 10px var(--neon-green);
     }
 
-    /* Jeu */
+    /* ========== JEU MODERNE ========== */
     #game-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 15px;
-      background: var(--bar-bg);
+      padding: 12px 15px;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(15px);
       border-bottom: 2px solid var(--rouge);
     }
     #timer {
-      font-size: 1.4rem;
+      font-size: 1.6rem;
       font-weight: bold;
-      color: var(--neon-blue);
-      text-shadow: 0 0 8px var(--neon-blue);
+      background: linear-gradient(135deg, var(--neon-blue), var(--neon-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 15px var(--neon-blue);
     }
     #game-area {
       flex: 1;
       overflow: auto;
-      -webkit-overflow-scrolling: touch;
-      background: radial-gradient(circle at 50% 50%, #0a1a0a, #000000);
-      position: relative;
+      background: radial-gradient(circle at 50% 50%, #0d1f0d, #000000);
     }
     #game-grid {
       display: grid;
@@ -303,27 +399,27 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
-      text-shadow: 0 0 8px currentColor;
-      transition: transform 0.1s;
+      font-size: 30px;
+      text-shadow: 0 0 10px currentColor;
       cursor: pointer;
+      transition: transform 0.1s;
       user-select: none;
     }
     .exploding {
-      animation: explode 0.35s ease-out forwards;
+      animation: explode 0.45s ease-out forwards;
       pointer-events: none;
     }
     @keyframes explode {
-      0% { transform: scale(1); opacity: 1; }
-      30% { transform: scale(1.7); opacity: 0.8; }
-      100% { transform: scale(0); opacity: 0; }
+      0% { transform: scale(1); opacity: 1; filter: blur(0px); }
+      30% { transform: scale(1.6); opacity: 0.9; filter: blur(2px); }
+      100% { transform: scale(0); opacity: 0; filter: blur(6px); }
     }
     .game-hint {
       text-align: center;
-      padding: 8px;
-      background: rgba(0,0,0,0.6);
-      color: #aaa;
-      font-size: 0.85rem;
+      padding: 6px;
+      background: rgba(0,0,0,0.7);
+      color: #ccc;
+      font-size: 0.8rem;
     }
 
     /* Overlay indice */
@@ -332,6 +428,7 @@
       top: 0; left: 0;
       width: 100%; height: 100%;
       background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(10px);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -342,20 +439,15 @@
     }
     #indice-overlay.hidden { display: none; }
 
+    /* Carte de défaite */
     .defeat-card {
-      background: var(--surface);
-      border-radius: 20px;
-      padding: 20px;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius);
+      padding: 25px;
       text-align: center;
-      margin: 20px 0;
-      border: 1px solid var(--neon-red);
-      box-shadow: 0 0 20px rgba(255,49,49,0.4);
-    }
-    .points {
-      font-size: 2rem;
-      font-weight: bold;
-      color: var(--gold);
-      text-shadow: 0 0 15px var(--gold);
+      margin: 10px 0;
+      border: 1px solid rgba(255,255,255,0.2);
     }
 
     .hidden { display: none !important; }
@@ -363,36 +455,38 @@
 </head>
 <body>
 <div id="app">
-  <!-- ÉCRAN INSCRIPTION -->
-  <div id="screen-inscription" class="screen">
-    <h1 style="color:var(--neon-green);">🇭🇹 Bienvenue !</h1>
-    <p>Pour participer, créez votre profil :</p>
-    <div class="input-group">
-      <label>Pseudo</label>
-      <input type="text" id="pseudo-input" placeholder="Votre pseudo" maxlength="15">
+  <!-- MODAL INSCRIPTION -->
+  <div id="modal-inscription" class="modal-overlay">
+    <div class="modal-card">
+      <h2 style="color:var(--neon-green); margin-bottom:10px;">🇭🇹 Crée ton profil</h2>
+      <div class="input-group">
+        <label>Pseudo</label>
+        <input type="text" id="pseudo-input" placeholder="Ton pseudo" maxlength="15">
+      </div>
+      <div class="input-group">
+        <label>WhatsApp</label>
+        <input type="tel" id="tel-input" placeholder="+509XXXXXXXX" value="+509">
+      </div>
+      <div class="input-group">
+        <label>Réception du gain</label>
+        <select id="mode-input">
+          <option value="MonCash">MonCash</option>
+          <option value="NatCash">NatCash</option>
+          <option value="LajanCash">LajanCash</option>
+          <option value="Banque">Banque</option>
+        </select>
+      </div>
+      <button id="save-profile-btn" class="btn-primary">💾 Enregistrer</button>
+      <button id="close-modal-btn" class="btn-small" style="width:100%;">Annuler</button>
     </div>
-    <div class="input-group">
-      <label>Numéro WhatsApp</label>
-      <input type="tel" id="tel-input" placeholder="+509XXXXXXXX" value="+509">
-    </div>
-    <div class="input-group">
-      <label>Mode de réception du gain</label>
-      <select id="mode-input">
-        <option value="MonCash">MonCash</option>
-        <option value="NatCash">NatCash</option>
-        <option value="LajanCash">LajanCash</option>
-        <option value="Banque">Banque</option>
-      </select>
-    </div>
-    <button id="save-profile-btn" class="btn-primary">💾 Enregistrer et jouer</button>
   </div>
 
-  <!-- ACCUEIL -->
+  <!-- ÉCRAN ACCUEIL -->
   <div id="screen-accueil" class="screen">
-    <h1 style="text-align:center; background:linear-gradient(135deg, var(--neon-green), var(--neon-blue)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Jwenn Drapo a 🇭🇹</h1>
-    <div class="subtitle" style="text-align:center; color:var(--neon-pink);">GRAND PRIX 10 000 HTG</div>
+    <h1 style="text-align:center; font-size:clamp(2rem,6vw,2.5rem); background:linear-gradient(135deg, var(--neon-green), var(--neon-blue)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Jwenn Drapo a 🇭🇹</h1>
+    <p style="text-align:center; color:var(--neon-pink); font-weight:bold;">GRAND PRIX 10 000 HTG</p>
     <div id="countdown-box">
-      <p>⏳ L'événement se termine dans :</p>
+      <p style="margin-bottom:5px;">⏳ Fin dans :</p>
       <div id="countdown">
         <span id="cd-days">00</span>J
         <span id="cd-hours">00</span>H
@@ -400,9 +494,9 @@
         <span id="cd-secs">00</span>S
       </div>
     </div>
-    <button id="go-to-jeu" class="btn-primary">🔍 Jouer maintenant</button>
+    <button id="play-btn-home" class="btn-primary">🎮 Jouer maintenant</button>
     <!-- Bannière Adsterra toujours visible -->
-    <div style="text-align:center; margin:15px 0;">
+    <div style="margin:15px 0; text-align:center;">
       <script>
         atOptions = {
           'key' : 'bfa34ea21f0dd2c4048fdf4cf8ddf94e',
@@ -414,9 +508,11 @@
       </script>
       <script src="https://penguinsincequalify.com/bfa34ea21f0dd2c4048fdf4cf8ddf94e/invoke.js"></script>
     </div>
+    <h2 style="color:var(--neon-blue); margin-top:20px;">🏆 Classement en direct</h2>
+    <ul id="leaderboard-list" class="leader-list"></ul>
   </div>
 
-  <!-- JEU -->
+  <!-- ÉCRAN JEU -->
   <div id="screen-jeu" class="screen">
     <div id="game-header">
       <span id="timer">⏱️ 01:00</span>
@@ -425,25 +521,25 @@
     <div id="game-area">
       <div id="game-grid"></div>
     </div>
-    <p class="game-hint">💥 Tape sur les arbres pour les faire disparaître !</p>
+    <p class="game-hint">💥 Tape les arbres pour les faire disparaître !</p>
   </div>
 
-  <!-- OVERLAY INDICE (dans l'écran de jeu) -->
+  <!-- OVERLAY INDICE -->
   <div id="indice-overlay" class="hidden">
     <h3 style="color:var(--neon-pink);">⏳ Plus que 30 secondes !</h3>
-    <p>Partage ce jeu à 10 personnes sur WhatsApp pour obtenir un indice.</p>
+    <p>Partage à 10 personnes sur WhatsApp pour obtenir un indice.</p>
     <button id="share-indice-btn" class="btn-share">📤 Partager et obtenir l'indice</button>
     <button id="close-indice-btn" class="btn-small" style="margin-top:10px;">Fermer</button>
   </div>
 
-  <!-- DEFAITE -->
+  <!-- ÉCRAN DÉFAITE -->
   <div id="screen-defaite" class="screen">
     <div class="defeat-card">
-      <h2>😞 Temps écoulé</h2>
-      <p>Vous avez tenu : <span id="defeat-time"></span></p>
-      <p>Points accumulés : <span class="points" id="defeat-points"></span></p>
+      <h2 style="color:var(--neon-red);">😞 Temps écoulé</h2>
+      <p>Tu as tenu <span id="defeat-time"></span></p>
+      <p>Points accumulés : <span id="defeat-points" class="points" style="font-size:2rem;"></span></p>
       <div style="margin:15px 0;">
-        <script async="async" data-cfasync="false" src="https://penguinsincequalify.com/623647ad2d51b4896cf878366ccdd192/invoke.js"></script>
+        <script async src="https://penguinsincequalify.com/623647ad2d51b4896cf878366ccdd192/invoke.js"></script>
         <div id="container-623647ad2d51b4896cf878366ccdd192"></div>
       </div>
       <button id="retry-btn" class="btn-primary">🔄 Réessayer</button>
@@ -451,28 +547,28 @@
     </div>
   </div>
 
-  <!-- GAME OVER -->
+  <!-- ÉCRAN GAME OVER -->
   <div id="screen-gameover" class="screen">
     <div class="defeat-card">
-      <h2>😔 Partie terminée</h2>
+      <h2 style="color:var(--neon-red);">😔 Partie terminée</h2>
       <p>Vos 5 chances sont épuisées.</p>
       <p>Revenez l'année prochaine ! 🇭🇹</p>
     </div>
   </div>
 
-  <!-- LEADERBOARD -->
+  <!-- ÉCRAN LEADERBOARD (redondant mais dédié) -->
   <div id="screen-leaderboard" class="screen">
-    <h2 style="color:var(--neon-green);">🏆 Classement des joueurs</h2>
-    <div id="leader-container"></div>
+    <h2 style="color:var(--neon-green);">🏆 Classement en direct</h2>
+    <ul id="leaderboard-full" class="leader-list"></ul>
   </div>
 
-  <!-- PROFIL -->
+  <!-- ÉCRAN PROFIL -->
   <div id="screen-profil" class="screen">
-    <div class="profil-card" style="text-align:center;">
+    <div class="profil-card">
       <div class="empty-profile-icon">👤</div>
       <h2 style="color:var(--neon-blue);">Mon Profil</h2>
       <p><strong>Pseudo :</strong> <span id="profil-pseudo"></span></p>
-      <p><strong>Téléphone :</strong> <span id="profil-tel"></span></p>
+      <p><strong>WhatsApp :</strong> <span id="profil-tel"></span></p>
       <p><strong>Réception :</strong> <span id="profil-mode"></span></p>
       <p><strong>Parties jouées :</strong> <span id="profil-parties"></span>/5</p>
       <p class="attempts-left" id="profil-restantes"></p>
@@ -485,7 +581,7 @@
 
   <!-- BOTTOM BAR -->
   <nav id="bottom-bar">
-    <button class="bar-btn" data-screen="screen-accueil"><span>🏠</span>Accueil</button>
+    <button class="bar-btn active" data-screen="screen-accueil"><span>🏠</span>Accueil</button>
     <button class="bar-btn" data-screen="screen-jeu"><span>🎮</span>Jouer</button>
     <button class="bar-btn" data-screen="screen-leaderboard"><span>🏆</span>Classement</button>
     <button class="bar-btn" data-screen="screen-profil"><span>👤</span>Profil</button>
@@ -494,14 +590,14 @@
 
 <script>
   (() => {
-    // Configuration
+    // ==================== CONFIGURATION ====================
     const MAX_ATTEMPTS = 5;
     const GAME_DURATION = 60;
     const SECRET_KEY = "HAITI1805";
-    const EVENT_END_DATE = new Date('2026-05-18T23:59:59-05:00');
     const SITE_URL = "https://jwenndrapom.netlify.app/";
+    const EVENT_END_DATE = new Date('2026-05-18T23:59:59-05:00');
 
-    // Stockage sécurisé
+    // ==================== STOCKAGE SÉCURISÉ ====================
     function simpleHash(str) {
       let hash = 5381;
       for (let i = 0; i < str.length; i++) hash = (hash * 33) ^ str.charCodeAt(i);
@@ -545,28 +641,25 @@
       secureSet('jwennDrapoHistory', { entries });
     }
 
-    // Navigation
+    // ==================== NAVIGATION ====================
     const screens = document.querySelectorAll('.screen');
     const barBtns = document.querySelectorAll('.bar-btn');
     function navigateTo(screenId) {
       screens.forEach(s => s.classList.remove('active'));
       const target = document.getElementById(screenId);
       if (target) target.classList.add('active');
-      // Afficher ou masquer la bottom bar
       const hideBar = ['screen-jeu', 'screen-defaite', 'screen-gameover'].includes(screenId);
       document.getElementById('bottom-bar').style.display = hideBar ? 'none' : 'flex';
-      // Mettre à jour l'état actif de la bottom bar
       barBtns.forEach(btn => {
         btn.classList.remove('active');
         if (btn.dataset.screen === screenId) btn.classList.add('active');
       });
     }
-
     barBtns.forEach(btn => {
       btn.addEventListener('click', () => navigateTo(btn.dataset.screen));
     });
 
-    // Compte à rebours global
+    // ==================== COMPTE À REBOURS ====================
     function updateCountdown() {
       const diff = EVENT_END_DATE - new Date();
       if (diff <= 0) {
@@ -585,31 +678,97 @@
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // Leaderboard (200 joueurs, 10 gagnants, avatars vides)
-    function buildLeaderboard() {
-      const noms = [
-        "Jean R.", "Michaëlle C.", "Pierre L.", "Magalie T.", "Frantz D.",
-        "Rose M.", "Ricardo A.", "Sophie P.", "Davidson F.", "Nathalie B.",
-        "Marc K.", "Claudine J.", "Emmanuel S.", "Fabienne G.", "Steeve R.",
-        "Chantal V.", "Kensley H.", "Wildine E.", "Marc-Andy Z.", "Youseline O.",
-        "Wesner P.", "Emmeline C.", "Johnny B.", "Farah D.", "Roody L."
-      ];
-      let html = `<table class="leader-table"><tr><th>Rang</th><th>Joueur</th><th>Points</th><th>Statut</th></tr>`;
-      for (let i = 0; i < 10; i++) {
-        const nom = noms[Math.floor(Math.random()*noms.length)];
-        const points = 5000 - i*200 + Math.floor(Math.random()*100);
-        html += `<tr class="winner-row"><td>${i+1}</td><td><span class="avatar-empty"></span>${nom}</td><td>${points}</td><td>🏆 Gagné</td></tr>`;
+    // ==================== LEADERBOARD DYNAMIQUE ====================
+    const nomsReels = [
+      "Jean R.", "Michaëlle C.", "Pierre L.", "Magalie T.", "Frantz D.",
+      "Rose M.", "Ricardo A.", "Sophie P.", "Davidson F.", "Nathalie B.",
+      "Marc K.", "Claudine J.", "Emmanuel S.", "Fabienne G.", "Steeve R.",
+      "Chantal V.", "Kensley H.", "Wildine E.", "Marc-Andy Z.", "Youseline O.",
+      "Wesner P.", "Emmeline C.", "Johnny B.", "Farah D.", "Roody L."
+    ];
+    let leaderboardData = []; // { name, score, won, rank }
+
+    function initLeaderboard() {
+      leaderboardData = [];
+      // 50 gagnants
+      for (let i = 0; i < 50; i++) {
+        leaderboardData.push({
+          name: nomsReels[Math.floor(Math.random()*nomsReels.length)],
+          score: 5000 - i*80 + Math.floor(Math.random()*200),
+          won: true
+        });
       }
-      for (let i = 10; i < 200; i++) {
-        const nom = noms[Math.floor(Math.random()*noms.length)];
-        const points = Math.floor(Math.random()*2000) + 100;
-        html += `<tr class="loser-row"><td>${i+1}</td><td><span class="avatar-empty"></span>${nom}</td><td>${points}</td><td>❌ Perdu</td></tr>`;
+      // perdants (le reste pour atteindre 200)
+      for (let i = 50; i < 200; i++) {
+        leaderboardData.push({
+          name: nomsReels[Math.floor(Math.random()*nomsReels.length)],
+          score: Math.floor(Math.random()*2500) + 100,
+          won: false
+        });
       }
-      html += '</table>';
-      document.getElementById('leader-container').innerHTML = html;
+      // Trier par score décroissant
+      leaderboardData.sort((a,b) => b.score - a.score);
+      leaderboardData.forEach((p, idx) => p.rank = idx+1);
     }
 
-    // Popunder (max 5)
+    function renderLeaderboard(containerId, limit = 100) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      let html = '';
+      const top = leaderboardData.slice(0, limit);
+      top.forEach(p => {
+        const crown = p.rank === 1 ? '👑' : p.rank === 2 ? '🥈' : p.rank === 3 ? '🥉' : '';
+        const initials = p.name.split(' ')[0][0] + (p.name.split(' ')[1] ? p.name.split(' ')[1][0] : '');
+        const color = p.won ? 'status-win' : 'status-lose';
+        html += `
+          <li class="player-row ${p.won ? 'winner' : ''}">
+            <span class="rank">${crown}${p.rank}</span>
+            <div class="avatar">${initials}</div>
+            <div class="player-info">
+              <div class="player-name">${p.name}</div>
+              <div class="player-score">${p.score} pts</div>
+            </div>
+            <span class="status-badge ${color}">${p.won ? 'Gagné' : 'Perdu'}</span>
+          </li>`;
+      });
+      container.innerHTML = html;
+    }
+
+    // Mise à jour simulée toutes les 4 secondes (modification de quelques scores)
+    function updateLeaderboardLive() {
+      if (leaderboardData.length < 200) initLeaderboard();
+      // Modifier aléatoirement 5 scores
+      for (let i = 0; i < 5; i++) {
+        const idx = Math.floor(Math.random() * leaderboardData.length);
+        leaderboardData[idx].score += Math.floor(Math.random() * 100) - 20;
+        if (leaderboardData[idx].score < 50) leaderboardData[idx].score = 50;
+      }
+      // Ajouter un nouveau perdant aléatoire en bas
+      if (leaderboardData.length < 300) {
+        leaderboardData.push({
+          name: nomsReels[Math.floor(Math.random()*nomsReels.length)],
+          score: Math.floor(Math.random()*500) + 20,
+          won: false
+        });
+      }
+      leaderboardData.sort((a,b) => b.score - a.score);
+      leaderboardData.forEach((p, idx) => p.rank = idx+1);
+      // Re-rendre les deux containers
+      renderLeaderboard('leaderboard-list', 20);
+      renderLeaderboard('leaderboard-full', 50);
+    }
+    initLeaderboard();
+    renderLeaderboard('leaderboard-list', 20);
+    renderLeaderboard('leaderboard-full', 50);
+    setInterval(updateLeaderboardLive, 4000);
+
+    // ==================== MODAL INSCRIPTION ====================
+    const modal = document.getElementById('modal-inscription');
+    function openModal() { modal.classList.add('active'); }
+    function closeModal() { modal.classList.remove('active'); }
+    document.getElementById('close-modal-btn').addEventListener('click', closeModal);
+
+    // ==================== POPUNDER ====================
     let popunderCount = 0;
     function triggerPopunder() {
       if (popunderCount >= 5) return;
@@ -619,7 +778,7 @@
       document.body.appendChild(s);
     }
 
-    // Jeu
+    // ==================== JEU ====================
     const GRID_SIZE = 20;
     const TREES = ['🌲','🌳','🌿','🍃','🌱','🌴','🎋','🍀','🌵','🍂'];
     const NEON_COLORS = ['#39ff14','#ff44cc','#00d4ff','#ff3131','#ffd700','#bc13fe'];
@@ -670,6 +829,10 @@
         navigateTo('screen-gameover');
         return;
       }
+      if (!getProfile()) {
+        openModal();
+        return;
+      }
       if (!incrementAttempts()) {
         navigateTo('screen-gameover');
         return;
@@ -702,12 +865,12 @@
       document.getElementById('indice-overlay').classList.add('hidden');
     }
 
-    // Explosion des arbres
+    // Explosion avec feedback
     document.getElementById('game-grid').addEventListener('click', function(e) {
       const cell = e.target.closest('.tree-cell');
       if (!cell || cell.classList.contains('exploding')) return;
       cell.classList.add('exploding');
-      setTimeout(() => { cell.style.display = 'none'; }, 400);
+      setTimeout(() => { cell.style.display = 'none'; }, 450);
     });
 
     // Indice
@@ -728,19 +891,31 @@
       document.getElementById('indice-overlay').classList.add('hidden');
     });
 
-    // Boutons principaux
-    document.getElementById('go-to-jeu').addEventListener('click', startGame);
+    // Boutons
+    document.getElementById('play-btn-home').addEventListener('click', startGame);
     document.getElementById('abandon-btn').addEventListener('click', () => abandonGame(false));
     document.getElementById('retry-btn').addEventListener('click', () => {
       if (isGameLocked()) navigateTo('screen-gameover');
       else startGame();
     });
     document.getElementById('share-defeat-btn').addEventListener('click', () => {
-      const text = encodeURIComponent(`🇭🇹 Je viens de perdre à Jwenn Drapo a ! Peux-tu faire mieux ? Joue ici : ${SITE_URL}`);
+      const text = encodeURIComponent(`🇭🇹 J'ai échoué à Jwenn Drapo a ! Peux-tu faire mieux ? Joue ici : ${SITE_URL}`);
       window.open(`https://wa.me/?text=${text}`, '_blank');
     });
 
-    // Profil
+    // Enregistrement du profil via modal
+    document.getElementById('save-profile-btn').addEventListener('click', () => {
+      const pseudo = document.getElementById('pseudo-input').value.trim();
+      const tel = document.getElementById('tel-input').value.trim();
+      const mode = document.getElementById('mode-input').value;
+      if (!pseudo || !tel) { alert('Veuillez remplir tous les champs'); return; }
+      saveProfile(pseudo, tel, mode);
+      closeModal();
+      // Lancer le jeu après inscription
+      startGame();
+    });
+
+    // Mise à jour profil
     function updateProfilScreen() {
       const profile = getProfile();
       if (profile) {
@@ -761,36 +936,18 @@
         });
       }
     }
+    document.querySelector('[data-screen="screen-profil"]').addEventListener('click', updateProfilScreen);
 
-    // Initialisation
-    const profil = getProfile();
-    if (!profil) {
-      document.getElementById('screen-inscription').classList.add('active');
-      document.getElementById('bottom-bar').style.display = 'none';
+    // ==================== INITIALISATION ====================
+    if (isGameLocked()) {
+      navigateTo('screen-gameover');
     } else {
       navigateTo('screen-accueil');
-      buildLeaderboard();
-      updateProfilScreen();
-    }
-
-    document.getElementById('save-profile-btn').addEventListener('click', () => {
-      const pseudo = document.getElementById('pseudo-input').value.trim();
-      const tel = document.getElementById('tel-input').value.trim();
-      const mode = document.getElementById('mode-input').value;
-      if (!pseudo || !tel) {
-        alert('Veuillez remplir tous les champs');
-        return;
+      if (!getProfile()) {
+        // On ne force plus, on attend que l'utilisateur clique Jouer
       }
-      saveProfile(pseudo, tel, mode);
-      document.getElementById('screen-inscription').classList.remove('active');
-      document.getElementById('bottom-bar').style.display = 'flex';
-      navigateTo('screen-accueil');
-      buildLeaderboard();
-      updateProfilScreen();
-    });
-
-    document.querySelector('[data-screen="screen-profil"]').addEventListener('click', updateProfilScreen);
+    }
   })();
 </script>
 </body>
-</html>
+                                                                      </html>
