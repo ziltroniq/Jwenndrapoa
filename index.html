@@ -14,6 +14,7 @@
   <meta name="twitter:card" content="summary_large_image">
 
   <style>
+    /* ========== RESET & BASE ========== */
     :root {
       --bleu: #00209F;
       --rouge: #D21034;
@@ -33,7 +34,7 @@
       width: 100%;
       height: 100%;
       background: var(--bg);
-      overflow: hidden; /* Empêche le scroll parasite du body */
+      overflow: hidden;
     }
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -42,6 +43,8 @@
       justify-content: center;
       align-items: center;
     }
+
+    /* ========== CONTENEUR PRINCIPAL ========== */
     #app {
       width: 100%;
       height: 100%;
@@ -54,19 +57,44 @@
       box-shadow: 0 0 30px rgba(0,212,255,0.3);
       border-radius: 20px 20px 0 0;
     }
+
+    /* ========== ÉCRANS : TOUS CACHÉS PAR DÉFAUT ========== */
     .screen {
       flex: 1;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       padding: 15px;
-      padding-bottom: 80px; /* Espace pour la bottom bar */
-      display: none; /* Caché par défaut */
-    }
-    .screen.active {
-      display: block;
+      padding-bottom: 80px; /* espace pour la bottom bar */
+      display: none; /* CACHÉ */
     }
 
-    /* Bottom bar */
+    /* Afficher UNIQUEMENT l'écran actif */
+    .screen.active {
+      display: block; /* Par défaut en block, certains passent en flex via des règles plus spécifiques */
+    }
+
+    /* ========== ÉCRANS SPÉCIFIQUES EN FLEX (uniquement quand actifs) ========== */
+    #screen-inscription.active {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+    }
+    #screen-jeu.active {
+      display: flex;
+      flex-direction: column;
+      padding: 0; /* Le jeu occupe tout l'espace sans padding */
+      padding-bottom: 0;
+    }
+    #screen-defaite.active,
+    #screen-gameover.active,
+    #screen-accueil.active,
+    #screen-leaderboard.active,
+    #screen-profil.active {
+      display: block; /* Comportement standard */
+    }
+
+    /* ========== BOTTOM BAR ========== */
     #bottom-bar {
       position: absolute;
       bottom: 0;
@@ -96,13 +124,7 @@
     .bar-btn.active { color: var(--neon-blue); text-shadow: 0 0 10px var(--neon-blue); }
     .bar-btn span { font-size: 1.5rem; }
 
-    /* Inscription */
-    #screen-inscription {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      text-align: center;
-    }
+    /* ========== ÉLÉMENTS COMMUNS ========== */
     .input-group {
       margin: 12px 0;
       text-align: left;
@@ -163,7 +185,6 @@
       cursor: pointer;
     }
 
-    /* Compte à rebours */
     #countdown-box {
       background: rgba(255,255,255,0.05);
       border: 1px solid var(--neon-pink);
@@ -249,11 +270,6 @@
     }
 
     /* Jeu */
-    #screen-jeu {
-      display: flex;
-      flex-direction: column;
-      padding: 0;
-    }
     #game-header {
       display: flex;
       justify-content: space-between;
@@ -482,7 +498,6 @@
     const MAX_ATTEMPTS = 5;
     const GAME_DURATION = 60;
     const SECRET_KEY = "HAITI1805";
-    const WHATSAPP_IMAGE_URL = "https://i.ibb.co/VotreImage/apercu.jpg";
     const EVENT_END_DATE = new Date('2026-05-18T23:59:59-05:00');
     const SITE_URL = "https://jwenndrapom.netlify.app/";
 
@@ -580,13 +595,11 @@
         "Wesner P.", "Emmeline C.", "Johnny B.", "Farah D.", "Roody L."
       ];
       let html = `<table class="leader-table"><tr><th>Rang</th><th>Joueur</th><th>Points</th><th>Statut</th></tr>`;
-      // 10 gagnants
       for (let i = 0; i < 10; i++) {
         const nom = noms[Math.floor(Math.random()*noms.length)];
         const points = 5000 - i*200 + Math.floor(Math.random()*100);
         html += `<tr class="winner-row"><td>${i+1}</td><td><span class="avatar-empty"></span>${nom}</td><td>${points}</td><td>🏆 Gagné</td></tr>`;
       }
-      // 190 perdants
       for (let i = 10; i < 200; i++) {
         const nom = noms[Math.floor(Math.random()*noms.length)];
         const points = Math.floor(Math.random()*2000) + 100;
@@ -752,7 +765,6 @@
     // Initialisation
     const profil = getProfile();
     if (!profil) {
-      // Afficher l'inscription, masquer la barre
       document.getElementById('screen-inscription').classList.add('active');
       document.getElementById('bottom-bar').style.display = 'none';
     } else {
@@ -777,9 +789,8 @@
       updateProfilScreen();
     });
 
-    // Mettre à jour le profil quand on y accède
     document.querySelector('[data-screen="screen-profil"]').addEventListener('click', updateProfilScreen);
   })();
 </script>
 </body>
-      </html>
+</html>
