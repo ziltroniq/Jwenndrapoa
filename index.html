@@ -14,14 +14,14 @@
   <meta name="twitter:card" content="summary_large_image">
 
   <style>
-    /* ========== MODERN RESET & BASE ========== */
+    /* ========== MODERN RESET & FULLSCREEN BASE ========== */
     :root {
       --bleu: #00209F;
       --rouge: #D21034;
       --vert: #2E7D32;
       --jaune: #FFC107;
-      --bg: #0a0a14;
-      --surface: rgba(20, 20, 40, 0.7);
+      --bg: #050816;
+      --surface: #101426;
       --glass: rgba(255, 255, 255, 0.05);
       --neon-green: #39ff14;
       --neon-pink: #ff44cc;
@@ -36,32 +36,24 @@
     html, body {
       width: 100%;
       height: 100%;
-      background: var(--bg);
+      margin: 0;
+      padding: 0;
       overflow: hidden;
+      background: var(--bg);
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: var(--text);
-    }
 
-    /* Conteneur principal – pleine hauteur, responsive */
+    /* Conteneur principal – PLEIN ÉCRAN */
     #app {
-      width: 100%;
-      height: 100%;
-      max-width: 500px;
+      width: 100vw;
+      height: 100vh;
+      min-height: 100dvh;
       position: relative;
       background: var(--surface);
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
-      border-radius: var(--radius) var(--radius) 0 0;
-      box-shadow: 0 0 40px rgba(0,212,255,0.3);
     }
 
     /* ========== ÉCRANS (cachés par défaut) ========== */
@@ -90,7 +82,7 @@
       padding-bottom: 0;
     }
 
-    /* ========== BOTTOM BAR PREMIUM ========== */
+    /* ========== BOTTOM BAR PREMIUM (pleine largeur) ========== */
     #bottom-bar {
       position: absolute;
       bottom: 0;
@@ -104,7 +96,6 @@
       padding: 8px 0 var(--safe-bottom);
       border-top: 1px solid rgba(255,255,255,0.15);
       z-index: 50;
-      border-radius: 20px 20px 0 0;
     }
     .bar-btn {
       background: transparent;
@@ -451,6 +442,15 @@
     }
 
     .hidden { display: none !important; }
+
+    /* ========== RESPONSIVE TABLETTE & DESKTOP ========== */
+    @media (min-width: 768px) {
+      /* Sur grand écran, on garde le contenu centré mais en pleine largeur */
+      #app {
+        width: 100%;
+        height: 100vh;
+      }
+    }
   </style>
 </head>
 <body>
@@ -556,7 +556,7 @@
     </div>
   </div>
 
-  <!-- ÉCRAN LEADERBOARD (redondant mais dédié) -->
+  <!-- ÉCRAN LEADERBOARD -->
   <div id="screen-leaderboard" class="screen">
     <h2 style="color:var(--neon-green);">🏆 Classement en direct</h2>
     <ul id="leaderboard-full" class="leader-list"></ul>
@@ -734,16 +734,14 @@
       container.innerHTML = html;
     }
 
-    // Mise à jour simulée toutes les 4 secondes (modification de quelques scores)
+    // Mise à jour simulée toutes les 4 secondes
     function updateLeaderboardLive() {
       if (leaderboardData.length < 200) initLeaderboard();
-      // Modifier aléatoirement 5 scores
       for (let i = 0; i < 5; i++) {
         const idx = Math.floor(Math.random() * leaderboardData.length);
         leaderboardData[idx].score += Math.floor(Math.random() * 100) - 20;
         if (leaderboardData[idx].score < 50) leaderboardData[idx].score = 50;
       }
-      // Ajouter un nouveau perdant aléatoire en bas
       if (leaderboardData.length < 300) {
         leaderboardData.push({
           name: nomsReels[Math.floor(Math.random()*nomsReels.length)],
@@ -753,7 +751,6 @@
       }
       leaderboardData.sort((a,b) => b.score - a.score);
       leaderboardData.forEach((p, idx) => p.rank = idx+1);
-      // Re-rendre les deux containers
       renderLeaderboard('leaderboard-list', 20);
       renderLeaderboard('leaderboard-full', 50);
     }
@@ -943,11 +940,8 @@
       navigateTo('screen-gameover');
     } else {
       navigateTo('screen-accueil');
-      if (!getProfile()) {
-        // On ne force plus, on attend que l'utilisateur clique Jouer
-      }
     }
   })();
 </script>
 </body>
-                                                                      </html>
+</html>
