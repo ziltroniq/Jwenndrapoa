@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=5.0, viewport-fit=cover">
   <title>Jwenn Drapo a 🇭🇹 – 10 000 HTG</title>
 
-  <!-- Open Graph (remplacez l'image par la vôtre sur ImgBB) -->
+  <!-- Open Graph -->
   <meta property="og:title" content="Jwenn Drapo a 🇭🇹 – Gagne 10 000 Gourdes">
   <meta property="og:description" content="Trouve le drapeau caché et remporte le grand prix ! Événement du 18 mai.">
   <meta property="og:image" content="https://i.ibb.co/VotreImage/apercu.jpg">
@@ -14,7 +14,7 @@
   <meta name="twitter:card" content="summary_large_image">
 
   <style>
-    /* ========== MODERN RESET & FULLSCREEN BASE ========== */
+    /* ========== MODERN RESET & FULLSCREEN ========== */
     :root {
       --bleu: #00209F;
       --rouge: #D21034;
@@ -28,7 +28,7 @@
       --neon-blue: #00d4ff;
       --gold: #ffd700;
       --text: #eee;
-      --bar-bg: rgba(26, 26, 46, 0.8);
+      --bar-bg: rgba(26, 26, 46, 0.9);
       --radius: clamp(12px, 3vw, 20px);
       --safe-bottom: env(safe-area-inset-bottom, 10px);
     }
@@ -44,7 +44,6 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* Conteneur principal – PLEIN ÉCRAN */
     #app {
       width: 100vw;
       height: 100vh;
@@ -56,19 +55,18 @@
       flex-direction: column;
     }
 
-    /* ========== ÉCRANS (cachés par défaut) ========== */
+    /* ========== ÉCRANS ========== */
     .screen {
       flex: 1;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       padding: clamp(10px, 3vw, 20px);
-      padding-bottom: calc(70px + var(--safe-bottom)); /* espace bottom bar */
+      padding-bottom: calc(70px + var(--safe-bottom) + 20px); /* place pour bottom bar fixed */
       display: none;
     }
     .screen.active {
       display: block;
     }
-    /* Écrans utilisant flexbox */
     #screen-inscription.active {
       display: flex;
       flex-direction: column;
@@ -82,9 +80,9 @@
       padding-bottom: 0;
     }
 
-    /* ========== BOTTOM BAR PREMIUM (pleine largeur) ========== */
+    /* ========== BOTTOM BAR FIXE PREMIUM ========== */
     #bottom-bar {
-      position: absolute;
+      position: fixed;
       bottom: 0;
       left: 0;
       width: 100%;
@@ -93,9 +91,10 @@
       -webkit-backdrop-filter: blur(20px);
       display: flex;
       justify-content: space-around;
-      padding: 8px 0 var(--safe-bottom);
+      padding: 8px 0 calc(8px + var(--safe-bottom));
       border-top: 1px solid rgba(255,255,255,0.15);
-      z-index: 50;
+      z-index: 9999;
+      box-shadow: 0 -4px 15px rgba(0,212,255,0.2);
     }
     .bar-btn {
       background: transparent;
@@ -117,18 +116,17 @@
     }
     .bar-btn span { font-size: 1.6rem; }
 
-    /* ========== MODAL INSCRIPTION (glassmorphism) ========== */
+    /* ========== MODAL INSCRIPTION ========== */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
       background: rgba(0,0,0,0.75);
       backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 100;
+      z-index: 10000;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s;
@@ -140,7 +138,6 @@
     .modal-card {
       background: var(--surface);
       backdrop-filter: blur(30px);
-      -webkit-backdrop-filter: blur(30px);
       border-radius: var(--radius);
       padding: clamp(20px, 5vw, 30px);
       width: 90%;
@@ -168,7 +165,7 @@
       width: 100%;
       padding: 12px;
       border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.2);
       background: rgba(0,0,0,0.4);
       color: white;
       font-size: 1rem;
@@ -213,10 +210,10 @@
       box-shadow: 0 8px 20px rgba(37,211,102,0.4);
     }
     .btn-small {
-      background: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.15);
       backdrop-filter: blur(10px);
       color: white;
-      border: 1px solid rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.25);
       padding: 10px 20px;
       border-radius: 30px;
       font-weight: bold;
@@ -253,7 +250,7 @@
       text-align: center;
     }
 
-    /* ========== LEADERBOARD ULTRA MODERNE ========== */
+    /* ========== LEADERBOARD (textes blancs) ========== */
     .leader-list {
       list-style: none;
       display: flex;
@@ -280,23 +277,20 @@
       font-weight: bold;
       width: 30px;
       color: var(--neon-blue);
-    }
-    .crown {
-      margin-right: 4px;
+      font-size: 1rem;
     }
     .avatar {
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background: #555;
+      background: linear-gradient(135deg, var(--neon-pink), var(--neon-blue));
       margin-right: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 0.9rem;
       color: white;
-      text-transform: uppercase;
-      background: linear-gradient(135deg, var(--neon-pink), var(--neon-blue));
+      font-weight: bold;
     }
     .player-info {
       flex: 1;
@@ -304,23 +298,25 @@
     .player-name {
       font-weight: 600;
       font-size: 0.95rem;
+      color: #fff; /* blanc forcé */
     }
     .player-score {
       font-size: 0.8rem;
-      color: #aaa;
+      color: var(--gold); /* jaune */
     }
     .status-badge {
       padding: 4px 10px;
       border-radius: 20px;
       font-size: 0.8rem;
       font-weight: bold;
+      color: white;
     }
     .status-win {
-      background: rgba(255,215,0,0.2);
+      background: rgba(255,215,0,0.25);
       color: var(--gold);
     }
     .status-lose {
-      background: rgba(255,49,49,0.2);
+      background: rgba(255,49,49,0.25);
       color: #ff7e7e;
     }
 
@@ -344,7 +340,7 @@
       align-items: center;
       justify-content: center;
       font-size: 2.5rem;
-      color: #aaa;
+      color: #ccc;
       backdrop-filter: blur(5px);
     }
     .attempts-left {
@@ -441,11 +437,65 @@
       border: 1px solid rgba(255,255,255,0.2);
     }
 
+    /* ========== TUTORIEL INTERACTIF ========== */
+    #tutorial-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10001;
+      padding: 20px;
+      text-align: center;
+    }
+    #tutorial-overlay.hidden {
+      display: none;
+    }
+    .tutorial-anim {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin: 20px auto;
+    }
+    .tutorial-tree {
+      font-size: 60px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: pulseGlow 1.5s infinite;
+      color: var(--neon-green);
+      text-shadow: 0 0 20px var(--neon-green);
+    }
+    .tutorial-finger {
+      position: absolute;
+      font-size: 40px;
+      top: 10%;
+      left: 50%;
+      transform: translate(-50%, 0);
+      animation: tapBounce 1s infinite;
+      filter: drop-shadow(0 4px 6px black);
+    }
+    @keyframes pulseGlow {
+      0% { transform: translate(-50%, -50%) scale(1); opacity: 0.9; }
+      50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 0.9; }
+    }
+    @keyframes tapBounce {
+      0% { transform: translate(-50%, 0); }
+      30% { transform: translate(-50%, 15px); }
+      50% { transform: translate(-50%, 0); }
+      100% { transform: translate(-50%, 0); }
+    }
+
     .hidden { display: none !important; }
 
-    /* ========== RESPONSIVE TABLETTE & DESKTOP ========== */
+    /* ========== RESPONSIVE TABLETTE ========== */
     @media (min-width: 768px) {
-      /* Sur grand écran, on garde le contenu centré mais en pleine largeur */
       #app {
         width: 100%;
         height: 100vh;
@@ -479,6 +529,19 @@
       <button id="save-profile-btn" class="btn-primary">💾 Enregistrer</button>
       <button id="close-modal-btn" class="btn-small" style="width:100%;">Annuler</button>
     </div>
+  </div>
+
+  <!-- TUTORIEL INTERACTIF -->
+  <div id="tutorial-overlay" class="hidden">
+    <h2 style="color:var(--neon-blue); margin-bottom:15px;">Comment jouer ?</h2>
+    <div class="tutorial-anim">
+      <span class="tutorial-tree">🌲</span>
+      <span class="tutorial-finger">👆</span>
+    </div>
+    <p style="color:white; font-size:1.1rem; max-width:300px; margin: 0 auto 20px;">
+      Tape sur les arbres pour les faire disparaître et révéler le drapeau caché 🇭🇹
+    </p>
+    <button id="close-tutorial-btn" class="btn-primary">👍 J'ai compris</button>
   </div>
 
   <!-- ÉCRAN ACCUEIL -->
@@ -537,7 +600,7 @@
     <div class="defeat-card">
       <h2 style="color:var(--neon-red);">😞 Temps écoulé</h2>
       <p>Tu as tenu <span id="defeat-time"></span></p>
-      <p>Points accumulés : <span id="defeat-points" class="points" style="font-size:2rem;"></span></p>
+      <p>Points accumulés : <span id="defeat-points" class="points" style="font-size:2rem; color:var(--gold);"></span></p>
       <div style="margin:15px 0;">
         <script async src="https://penguinsincequalify.com/623647ad2d51b4896cf878366ccdd192/invoke.js"></script>
         <div id="container-623647ad2d51b4896cf878366ccdd192"></div>
@@ -575,11 +638,11 @@
     </div>
     <div class="profil-card">
       <h2>📜 Historique</h2>
-      <ul id="history-list" style="list-style:none; max-height:200px; overflow-y:auto;"></ul>
+      <ul id="history-list" style="list-style:none; max-height:200px; overflow-y:auto; color:white;"></ul>
     </div>
   </div>
 
-  <!-- BOTTOM BAR -->
+  <!-- BOTTOM BAR FIXE -->
   <nav id="bottom-bar">
     <button class="bar-btn active" data-screen="screen-accueil"><span>🏠</span>Accueil</button>
     <button class="bar-btn" data-screen="screen-jeu"><span>🎮</span>Jouer</button>
@@ -590,14 +653,14 @@
 
 <script>
   (() => {
-    // ==================== CONFIGURATION ====================
+    // ==================== CONFIG ====================
     const MAX_ATTEMPTS = 5;
     const GAME_DURATION = 60;
     const SECRET_KEY = "HAITI1805";
     const SITE_URL = "https://jwenndrapom.netlify.app/";
     const EVENT_END_DATE = new Date('2026-05-18T23:59:59-05:00');
 
-    // ==================== STOCKAGE SÉCURISÉ ====================
+    // ==================== STOCKAGE ====================
     function simpleHash(str) {
       let hash = 5381;
       for (let i = 0; i < str.length; i++) hash = (hash * 33) ^ str.charCodeAt(i);
@@ -618,11 +681,8 @@
       } catch(e) { localStorage.removeItem(key); return null; }
     }
 
-    // Profil
     function saveProfile(pseudo, tel, mode) { secureSet('profil', { pseudo, tel, mode }); }
     function getProfile() { return secureGet('profil'); }
-
-    // Tentatives
     function getAttempts() { const d = secureGet('jwennDrapoAttempts'); return d ? d.count : 0; }
     function setAttempts(c) { secureSet('jwennDrapoAttempts', { count: c }); }
     function incrementAttempts() {
@@ -632,7 +692,6 @@
     }
     function isGameLocked() { return getAttempts() >= MAX_ATTEMPTS; }
 
-    // Historique
     function loadHistory() { const d = secureGet('jwennDrapoHistory'); return d ? d.entries : []; }
     function addHistory(entry) {
       let entries = loadHistory();
@@ -648,6 +707,7 @@
       screens.forEach(s => s.classList.remove('active'));
       const target = document.getElementById(screenId);
       if (target) target.classList.add('active');
+      // Bottom bar toujours visible sauf dans le jeu et écrans spéciaux
       const hideBar = ['screen-jeu', 'screen-defaite', 'screen-gameover'].includes(screenId);
       document.getElementById('bottom-bar').style.display = hideBar ? 'none' : 'flex';
       barBtns.forEach(btn => {
@@ -655,6 +715,7 @@
         if (btn.dataset.screen === screenId) btn.classList.add('active');
       });
     }
+
     barBtns.forEach(btn => {
       btn.addEventListener('click', () => navigateTo(btn.dataset.screen));
     });
@@ -686,11 +747,10 @@
       "Chantal V.", "Kensley H.", "Wildine E.", "Marc-Andy Z.", "Youseline O.",
       "Wesner P.", "Emmeline C.", "Johnny B.", "Farah D.", "Roody L."
     ];
-    let leaderboardData = []; // { name, score, won, rank }
+    let leaderboardData = [];
 
     function initLeaderboard() {
       leaderboardData = [];
-      // 50 gagnants
       for (let i = 0; i < 50; i++) {
         leaderboardData.push({
           name: nomsReels[Math.floor(Math.random()*nomsReels.length)],
@@ -698,7 +758,6 @@
           won: true
         });
       }
-      // perdants (le reste pour atteindre 200)
       for (let i = 50; i < 200; i++) {
         leaderboardData.push({
           name: nomsReels[Math.floor(Math.random()*nomsReels.length)],
@@ -706,7 +765,6 @@
           won: false
         });
       }
-      // Trier par score décroissant
       leaderboardData.sort((a,b) => b.score - a.score);
       leaderboardData.forEach((p, idx) => p.rank = idx+1);
     }
@@ -734,7 +792,6 @@
       container.innerHTML = html;
     }
 
-    // Mise à jour simulée toutes les 4 secondes
     function updateLeaderboardLive() {
       if (leaderboardData.length < 200) initLeaderboard();
       for (let i = 0; i < 5; i++) {
@@ -764,6 +821,19 @@
     function openModal() { modal.classList.add('active'); }
     function closeModal() { modal.classList.remove('active'); }
     document.getElementById('close-modal-btn').addEventListener('click', closeModal);
+
+    // ==================== TUTORIEL ====================
+    const tutorialOverlay = document.getElementById('tutorial-overlay');
+    function showTutorial() {
+      tutorialOverlay.classList.remove('hidden');
+    }
+    function hideTutorial() {
+      tutorialOverlay.classList.add('hidden');
+    }
+    document.getElementById('close-tutorial-btn').addEventListener('click', () => {
+      hideTutorial();
+      startGame(); // lancer le jeu après avoir compris
+    });
 
     // ==================== POPUNDER ====================
     let popunderCount = 0;
@@ -888,19 +958,31 @@
       document.getElementById('indice-overlay').classList.add('hidden');
     });
 
-    // Boutons
-    document.getElementById('play-btn-home').addEventListener('click', startGame);
+    // Boutons principaux
+    document.getElementById('play-btn-home').addEventListener('click', () => {
+      if (isGameLocked()) {
+        navigateTo('screen-gameover');
+        return;
+      }
+      if (!getProfile()) {
+        openModal();
+        return;
+      }
+      // Afficher le tutoriel avant de lancer le jeu
+      showTutorial();
+    });
+
     document.getElementById('abandon-btn').addEventListener('click', () => abandonGame(false));
     document.getElementById('retry-btn').addEventListener('click', () => {
       if (isGameLocked()) navigateTo('screen-gameover');
-      else startGame();
+      else startGame(); // rejoue directement (pas de tutoriel répété)
     });
     document.getElementById('share-defeat-btn').addEventListener('click', () => {
       const text = encodeURIComponent(`🇭🇹 J'ai échoué à Jwenn Drapo a ! Peux-tu faire mieux ? Joue ici : ${SITE_URL}`);
       window.open(`https://wa.me/?text=${text}`, '_blank');
     });
 
-    // Enregistrement du profil via modal
+    // Enregistrement profil
     document.getElementById('save-profile-btn').addEventListener('click', () => {
       const pseudo = document.getElementById('pseudo-input').value.trim();
       const tel = document.getElementById('tel-input').value.trim();
@@ -908,8 +990,8 @@
       if (!pseudo || !tel) { alert('Veuillez remplir tous les champs'); return; }
       saveProfile(pseudo, tel, mode);
       closeModal();
-      // Lancer le jeu après inscription
-      startGame();
+      // Après inscription, on montre le tutoriel puis le jeu
+      showTutorial();
     });
 
     // Mise à jour profil
@@ -929,6 +1011,7 @@
         history.slice().reverse().forEach(h => {
           const li = document.createElement('li');
           li.textContent = `Partie ${h.attempt} : ${h.time}s - ${h.points} pts`;
+          li.style.color = 'white';
           list.appendChild(li);
         });
       }
@@ -944,4 +1027,4 @@
   })();
 </script>
 </body>
-</html>
+  </html>
