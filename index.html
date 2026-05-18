@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=5.0, viewport-fit=cover">
   <title>Jwenn Drapo a 🇭🇹 – 10 000 HTG</title>
 
-  <!-- Open Graph -->
+  <!-- ========== OPEN GRAPH (image fournie) ========== -->
   <meta property="og:title" content="Jwenn Drapo a 🇭🇹 – Gagne 10 000 Gourdes">
   <meta property="og:description" content="Trouve le drapeau caché et remporte le grand prix ! Événement du 18 mai.">
-  <meta property="og:image" content="https://i.ibb.co/VotreImage/apercu.jpg">
+  <meta property="og:image" content="https://i.ibb.co/qMZmcZH7/In-Shot-20260517-194204430.webp">
   <meta property="og:url" content="https://jwenndrapom.netlify.app/">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
@@ -42,6 +42,7 @@
       background: var(--bg);
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       -webkit-tap-highlight-color: transparent;
+      color: var(--text); /* Texte par défaut blanc */
     }
 
     #app {
@@ -61,7 +62,7 @@
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       padding: clamp(10px, 3vw, 20px);
-      padding-bottom: calc(70px + var(--safe-bottom) + 20px); /* place pour bottom bar fixed */
+      padding-bottom: calc(70px + var(--safe-bottom) + 20px);
       display: none;
     }
     .screen.active {
@@ -80,7 +81,7 @@
       padding-bottom: 0;
     }
 
-    /* ========== BOTTOM BAR FIXE PREMIUM ========== */
+    /* ========== BOTTOM BAR FIXE ========== */
     #bottom-bar {
       position: fixed;
       bottom: 0;
@@ -146,6 +147,7 @@
       box-shadow: 0 20px 40px rgba(0,0,0,0.5);
       transform: scale(0.9);
       transition: transform 0.3s;
+      color: white; /* tout le texte du modal en blanc */
     }
     .modal-overlay.active .modal-card {
       transform: scale(1);
@@ -248,76 +250,57 @@
       border-radius: 10px;
       min-width: 45px;
       text-align: center;
+      color: white;
     }
 
-    /* ========== LEADERBOARD (textes blancs) ========== */
-    .leader-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin: 15px 0;
-      max-height: 400px;
-      overflow-y: auto;
-    }
-    .player-row {
-      display: flex;
-      align-items: center;
+    /* ========== NOTIFICATIONS DE GAINS (toutes les 10s) ========== */
+    #winners-feed, #winners-feed-full {
       background: var(--glass);
-      backdrop-filter: blur(8px);
-      border-radius: 14px;
-      padding: 10px 12px;
-      border: 1px solid rgba(255,255,255,0.1);
-      transition: transform 0.2s;
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius);
+      padding: 12px;
+      margin: 15px 0;
+      border: 1px solid rgba(255,215,0,0.3);
+      max-height: 200px;
+      overflow-y: auto;
+      color: white;
     }
-    .player-row.winner {
-      border-left: 4px solid var(--gold);
-    }
-    .rank {
-      font-weight: bold;
-      width: 30px;
-      color: var(--neon-blue);
-      font-size: 1rem;
-    }
-    .avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--neon-pink), var(--neon-blue));
-      margin-right: 10px;
+    .winner-toast {
       display: flex;
       align-items: center;
-      justify-content: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
       font-size: 0.9rem;
-      color: white;
+    }
+    .winner-toast:last-child { border-bottom: none; }
+    .winner-toast .trophy { margin-right: 8px; }
+    .winner-toast .amount { color: var(--gold); font-weight: bold; margin-left: auto; }
+
+    /* ========== COMPTEUR JOUEURS ========== */
+    #players-counter {
+      text-align: center;
+      color: var(--neon-blue);
       font-weight: bold;
+      margin: 10px 0;
+      font-size: 1rem;
+      text-shadow: 0 0 8px var(--neon-blue);
     }
-    .player-info {
-      flex: 1;
-    }
-    .player-name {
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: #fff; /* blanc forcé */
-    }
-    .player-score {
-      font-size: 0.8rem;
-      color: var(--gold); /* jaune */
-    }
-    .status-badge {
-      padding: 4px 10px;
+
+    /* ========== PROGRESS BAR (6e chance) ========== */
+    .progress-bar-bg {
+      background: rgba(255,255,255,0.1);
       border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: bold;
-      color: white;
+      height: 20px;
+      width: 100%;
+      margin: 15px 0;
+      overflow: hidden;
     }
-    .status-win {
-      background: rgba(255,215,0,0.25);
-      color: var(--gold);
-    }
-    .status-lose {
-      background: rgba(255,49,49,0.25);
-      color: #ff7e7e;
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #25D366, #128C7E);
+      border-radius: 20px;
+      transition: width 0.5s;
     }
 
     /* ========== PROFIL ========== */
@@ -329,6 +312,7 @@
       border: 1px solid rgba(255,255,255,0.15);
       margin-bottom: 15px;
       text-align: center;
+      color: white;
     }
     .empty-profile-icon {
       width: 70px;
@@ -423,6 +407,7 @@
       z-index: 20;
       padding: 20px;
       text-align: center;
+      color: white;
     }
     #indice-overlay.hidden { display: none; }
 
@@ -435,9 +420,12 @@
       text-align: center;
       margin: 10px 0;
       border: 1px solid rgba(255,255,255,0.2);
+      color: white;
     }
 
-    /* ========== TUTORIEL INTERACTIF ========== */
+    .hidden { display: none !important; }
+
+    /* ========== TUTORIEL ========== */
     #tutorial-overlay {
       position: fixed;
       top: 0; left: 0;
@@ -451,9 +439,7 @@
       z-index: 10001;
       padding: 20px;
       text-align: center;
-    }
-    #tutorial-overlay.hidden {
-      display: none;
+      color: white;
     }
     .tutorial-anim {
       position: relative;
@@ -492,14 +478,8 @@
       100% { transform: translate(-50%, 0); }
     }
 
-    .hidden { display: none !important; }
-
-    /* ========== RESPONSIVE TABLETTE ========== */
     @media (min-width: 768px) {
-      #app {
-        width: 100%;
-        height: 100vh;
-      }
+      #app { width: 100%; height: 100vh; }
     }
   </style>
 </head>
@@ -531,6 +511,20 @@
     </div>
   </div>
 
+  <!-- MODAL 6E CHANCE (partage) -->
+  <div id="modal-extra-chance" class="modal-overlay">
+    <div class="modal-card" style="text-align:center;">
+      <h2 style="color:var(--gold);">🎁 6ᵉ chance !</h2>
+      <p style="color:white;">Partage ce jeu à 10 personnes pour obtenir une dernière tentative.</p>
+      <div id="share-progress-text" style="color:white; margin:10px 0;">0 / 10 partages</div>
+      <div class="progress-bar-bg">
+        <div id="share-progress-fill" class="progress-bar-fill" style="width:0%;"></div>
+      </div>
+      <button id="btn-share-extra" class="btn-share">📤 Partager maintenant</button>
+      <button id="close-extra-modal" class="btn-small" style="width:100%; margin-top:10px;">Annuler</button>
+    </div>
+  </div>
+
   <!-- TUTORIEL INTERACTIF -->
   <div id="tutorial-overlay" class="hidden">
     <h2 style="color:var(--neon-blue); margin-bottom:15px;">Comment jouer ?</h2>
@@ -549,7 +543,7 @@
     <h1 style="text-align:center; font-size:clamp(2rem,6vw,2.5rem); background:linear-gradient(135deg, var(--neon-green), var(--neon-blue)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Jwenn Drapo a 🇭🇹</h1>
     <p style="text-align:center; color:var(--neon-pink); font-weight:bold;">GRAND PRIX 10 000 HTG</p>
     <div id="countdown-box">
-      <p style="margin-bottom:5px;">⏳ Fin dans :</p>
+      <p style="margin-bottom:5px; color:white;">⏳ Fin dans :</p>
       <div id="countdown">
         <span id="cd-days">00</span>J
         <span id="cd-hours">00</span>H
@@ -557,8 +551,10 @@
         <span id="cd-secs">00</span>S
       </div>
     </div>
+    <!-- ★ COMPTEUR JOUEURS ★ -->
+    <div id="players-counter">👥 <span id="total-players">145 287</span> personnes ont déjà joué !</div>
     <button id="play-btn-home" class="btn-primary">🎮 Jouer maintenant</button>
-    <!-- Bannière Adsterra toujours visible -->
+    <!-- Bannière Adsterra -->
     <div style="margin:15px 0; text-align:center;">
       <script>
         atOptions = {
@@ -571,8 +567,9 @@
       </script>
       <script src="https://penguinsincequalify.com/bfa34ea21f0dd2c4048fdf4cf8ddf94e/invoke.js"></script>
     </div>
-    <h2 style="color:var(--neon-blue); margin-top:20px;">🏆 Classement en direct</h2>
-    <ul id="leaderboard-list" class="leader-list"></ul>
+    <!-- ★ LEADERBOARD NOTIFICATIONS ★ -->
+    <h2 style="color:var(--neon-blue); margin-top:20px;">🏆 Derniers gagnants</h2>
+    <div id="winners-feed"></div>
   </div>
 
   <!-- ÉCRAN JEU -->
@@ -600,7 +597,9 @@
     <div class="defeat-card">
       <h2 style="color:var(--neon-red);">😞 Temps écoulé</h2>
       <p>Tu as tenu <span id="defeat-time"></span></p>
-      <p>Points accumulés : <span id="defeat-points" class="points" style="font-size:2rem; color:var(--gold);"></span></p>
+      <p>Points accumulés : <span id="defeat-points" style="font-size:2rem; color:var(--gold);"></span></p>
+      <!-- ★ PARTIES RESTANTES ★ -->
+      <p style="margin-top:10px;">Parties restantes : <strong id="remaining-attempts"></strong></p>
       <div style="margin:15px 0;">
         <script async src="https://penguinsincequalify.com/623647ad2d51b4896cf878366ccdd192/invoke.js"></script>
         <div id="container-623647ad2d51b4896cf878366ccdd192"></div>
@@ -615,14 +614,17 @@
     <div class="defeat-card">
       <h2 style="color:var(--neon-red);">😔 Partie terminée</h2>
       <p>Vos 5 chances sont épuisées.</p>
-      <p>Revenez l'année prochaine ! 🇭🇹</p>
+      <p>Mais... partage à 10 personnes pour une 6ᵉ chance !</p>
+      <button id="btn-extra-chance" class="btn-share">🎁 Obtenir une 6ᵉ chance</button>
     </div>
   </div>
 
   <!-- ÉCRAN LEADERBOARD -->
   <div id="screen-leaderboard" class="screen">
-    <h2 style="color:var(--neon-green);">🏆 Classement en direct</h2>
-    <ul id="leaderboard-full" class="leader-list"></ul>
+    <h2 style="color:var(--neon-green);">🏆 Derniers gagnants</h2>
+    <!-- ★ DEUXIÈME FEED (identique, pour la page dédiée) ★ -->
+    <div id="winners-feed-full"></div>
+    <p style="color:white; text-align:center; margin-top:15px;">Mise à jour toutes les 10 secondes</p>
   </div>
 
   <!-- ÉCRAN PROFIL -->
@@ -646,7 +648,7 @@
   <nav id="bottom-bar">
     <button class="bar-btn active" data-screen="screen-accueil"><span>🏠</span>Accueil</button>
     <button class="bar-btn" data-screen="screen-jeu"><span>🎮</span>Jouer</button>
-    <button class="bar-btn" data-screen="screen-leaderboard"><span>🏆</span>Classement</button>
+    <button class="bar-btn" data-screen="screen-leaderboard"><span>🏆</span>Gagnants</button>
     <button class="bar-btn" data-screen="screen-profil"><span>👤</span>Profil</button>
   </nav>
 </div>
@@ -660,7 +662,7 @@
     const SITE_URL = "https://jwenndrapom.netlify.app/";
     const EVENT_END_DATE = new Date('2026-05-18T23:59:59-05:00');
 
-    // ==================== STOCKAGE ====================
+    // ==================== STOCKAGE SÉCURISÉ ====================
     function simpleHash(str) {
       let hash = 5381;
       for (let i = 0; i < str.length; i++) hash = (hash * 33) ^ str.charCodeAt(i);
@@ -683,14 +685,25 @@
 
     function saveProfile(pseudo, tel, mode) { secureSet('profil', { pseudo, tel, mode }); }
     function getProfile() { return secureGet('profil'); }
+
+    // Tentatives (inclut la 6e chance)
     function getAttempts() { const d = secureGet('jwennDrapoAttempts'); return d ? d.count : 0; }
     function setAttempts(c) { secureSet('jwennDrapoAttempts', { count: c }); }
+    function hasExtraChance() { const d = secureGet('jwennExtra'); return d ? d.used : false; }
+    function setExtraChance(val) { secureSet('jwennExtra', { used: val }); }
+
     function incrementAttempts() {
       let c = getAttempts();
-      if (c >= MAX_ATTEMPTS) return false;
-      c++; setAttempts(c); return true;
+      const extra = hasExtraChance();
+      const max = extra ? MAX_ATTEMPTS + 1 : MAX_ATTEMPTS;
+      if (c >= max) return false;
+      c++; setAttempts(c);
+      return true;
     }
-    function isGameLocked() { return getAttempts() >= MAX_ATTEMPTS; }
+    function isGameLocked() {
+      const extra = hasExtraChance();
+      return getAttempts() >= (extra ? MAX_ATTEMPTS + 1 : MAX_ATTEMPTS);
+    }
 
     function loadHistory() { const d = secureGet('jwennDrapoHistory'); return d ? d.entries : []; }
     function addHistory(entry) {
@@ -707,7 +720,6 @@
       screens.forEach(s => s.classList.remove('active'));
       const target = document.getElementById(screenId);
       if (target) target.classList.add('active');
-      // Bottom bar toujours visible sauf dans le jeu et écrans spéciaux
       const hideBar = ['screen-jeu', 'screen-defaite', 'screen-gameover'].includes(screenId);
       document.getElementById('bottom-bar').style.display = hideBar ? 'none' : 'flex';
       barBtns.forEach(btn => {
@@ -715,10 +727,7 @@
         if (btn.dataset.screen === screenId) btn.classList.add('active');
       });
     }
-
-    barBtns.forEach(btn => {
-      btn.addEventListener('click', () => navigateTo(btn.dataset.screen));
-    });
+    barBtns.forEach(btn => btn.addEventListener('click', () => navigateTo(btn.dataset.screen)));
 
     // ==================== COMPTE À REBOURS ====================
     function updateCountdown() {
@@ -739,101 +748,81 @@
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // ==================== LEADERBOARD DYNAMIQUE ====================
-    const nomsReels = [
-      "Jean R.", "Michaëlle C.", "Pierre L.", "Magalie T.", "Frantz D.",
-      "Rose M.", "Ricardo A.", "Sophie P.", "Davidson F.", "Nathalie B.",
-      "Marc K.", "Claudine J.", "Emmanuel S.", "Fabienne G.", "Steeve R.",
-      "Chantal V.", "Kensley H.", "Wildine E.", "Marc-Andy Z.", "Youseline O.",
-      "Wesner P.", "Emmeline C.", "Johnny B.", "Farah D.", "Roody L."
+    // ==================== NOTIFICATIONS DE GAINS (toutes les 10s) ★ ====================
+    const nomsGagnants = [
+      "Claude J.", "Remy D.", "Magalie T.", "Pierre L.", "Rose M.",
+      "Davidson F.", "Nathalie B.", "Marc K.", "Claudine J.", "Emmanuel S.",
+      "Steeve R.", "Chantal V.", "Kensley H.", "Wildine E.", "Youseline O.",
+      "Jean R.", "Michaëlle C.", "Frantz D.", "Ricardo A.", "Sophie P."
     ];
-    let leaderboardData = [];
-
-    function initLeaderboard() {
-      leaderboardData = [];
-      for (let i = 0; i < 50; i++) {
-        leaderboardData.push({
-          name: nomsReels[Math.floor(Math.random()*nomsReels.length)],
-          score: 5000 - i*80 + Math.floor(Math.random()*200),
-          won: true
-        });
-      }
-      for (let i = 50; i < 200; i++) {
-        leaderboardData.push({
-          name: nomsReels[Math.floor(Math.random()*nomsReels.length)],
-          score: Math.floor(Math.random()*2500) + 100,
-          won: false
-        });
-      }
-      leaderboardData.sort((a,b) => b.score - a.score);
-      leaderboardData.forEach((p, idx) => p.rank = idx+1);
-    }
-
-    function renderLeaderboard(containerId, limit = 100) {
-      const container = document.getElementById(containerId);
-      if (!container) return;
+    function generateWinnersFeed(limit = 20) {
       let html = '';
-      const top = leaderboardData.slice(0, limit);
-      top.forEach(p => {
-        const crown = p.rank === 1 ? '👑' : p.rank === 2 ? '🥈' : p.rank === 3 ? '🥉' : '';
-        const initials = p.name.split(' ')[0][0] + (p.name.split(' ')[1] ? p.name.split(' ')[1][0] : '');
-        const color = p.won ? 'status-win' : 'status-lose';
-        html += `
-          <li class="player-row ${p.won ? 'winner' : ''}">
-            <span class="rank">${crown}${p.rank}</span>
-            <div class="avatar">${initials}</div>
-            <div class="player-info">
-              <div class="player-name">${p.name}</div>
-              <div class="player-score">${p.score} pts</div>
-            </div>
-            <span class="status-badge ${color}">${p.won ? 'Gagné' : 'Perdu'}</span>
-          </li>`;
-      });
-      container.innerHTML = html;
+      for (let i = 0; i < limit; i++) {
+        const nom = nomsGagnants[Math.floor(Math.random() * nomsGagnants.length)];
+        html += `<div class="winner-toast"><span class="trophy">🏆</span> ${nom} <span class="amount">+10 000 HTG</span></div>`;
+      }
+      return html;
     }
+    function updateWinnersFeed() {
+      const feed1 = document.getElementById('winners-feed');
+      const feed2 = document.getElementById('winners-feed-full');
+      const html = generateWinnersFeed(20);
+      if (feed1) feed1.innerHTML = html;
+      if (feed2) feed2.innerHTML = html;
+    }
+    updateWinnersFeed();
+    setInterval(updateWinnersFeed, 10000); // <-- MIS À JOUR TOUTES LES 10 SECONDES
 
-    function updateLeaderboardLive() {
-      if (leaderboardData.length < 200) initLeaderboard();
-      for (let i = 0; i < 5; i++) {
-        const idx = Math.floor(Math.random() * leaderboardData.length);
-        leaderboardData[idx].score += Math.floor(Math.random() * 100) - 20;
-        if (leaderboardData[idx].score < 50) leaderboardData[idx].score = 50;
-      }
-      if (leaderboardData.length < 300) {
-        leaderboardData.push({
-          name: nomsReels[Math.floor(Math.random()*nomsReels.length)],
-          score: Math.floor(Math.random()*500) + 20,
-          won: false
-        });
-      }
-      leaderboardData.sort((a,b) => b.score - a.score);
-      leaderboardData.forEach((p, idx) => p.rank = idx+1);
-      renderLeaderboard('leaderboard-list', 20);
-      renderLeaderboard('leaderboard-full', 50);
+    // ==================== COMPTEUR JOUEURS ★ ====================
+    let totalJoueurs = 145287;
+    function updatePlayerCounter() {
+      totalJoueurs += Math.floor(Math.random() * 5) + 1;
+      const el = document.getElementById('total-players');
+      if (el) el.textContent = totalJoueurs.toLocaleString('fr-FR');
     }
-    initLeaderboard();
-    renderLeaderboard('leaderboard-list', 20);
-    renderLeaderboard('leaderboard-full', 50);
-    setInterval(updateLeaderboardLive, 4000);
+    setInterval(updatePlayerCounter, 3000);
+    updatePlayerCounter();
 
     // ==================== MODAL INSCRIPTION ====================
-    const modal = document.getElementById('modal-inscription');
-    function openModal() { modal.classList.add('active'); }
-    function closeModal() { modal.classList.remove('active'); }
-    document.getElementById('close-modal-btn').addEventListener('click', closeModal);
+    const modalInscription = document.getElementById('modal-inscription');
+    function openInscription() { modalInscription.classList.add('active'); }
+    function closeInscription() { modalInscription.classList.remove('active'); }
+    document.getElementById('close-modal-btn').addEventListener('click', closeInscription);
 
     // ==================== TUTORIEL ====================
     const tutorialOverlay = document.getElementById('tutorial-overlay');
-    function showTutorial() {
-      tutorialOverlay.classList.remove('hidden');
-    }
-    function hideTutorial() {
-      tutorialOverlay.classList.add('hidden');
-    }
+    function showTutorial() { tutorialOverlay.classList.remove('hidden'); }
+    function hideTutorial() { tutorialOverlay.classList.add('hidden'); }
     document.getElementById('close-tutorial-btn').addEventListener('click', () => {
       hideTutorial();
-      startGame(); // lancer le jeu après avoir compris
+      startGame();
     });
+
+    // ==================== 6E CHANCE (MODAL) ★ ====================
+    const modalExtra = document.getElementById('modal-extra-chance');
+    let extraShareCount = 0;
+    function openExtraModal() {
+      extraShareCount = 0;
+      document.getElementById('share-progress-text').textContent = '0 / 10 partages';
+      document.getElementById('share-progress-fill').style.width = '0%';
+      modalExtra.classList.add('active');
+    }
+    function closeExtraModal() { modalExtra.classList.remove('active'); }
+    document.getElementById('close-extra-modal').addEventListener('click', closeExtraModal);
+    document.getElementById('btn-share-extra').addEventListener('click', () => {
+      const text = encodeURIComponent(`🇭🇹 Je tente de gagner 10 000 HTG sur Jwenn Drapo a ! Rejoins-moi : ${SITE_URL}`);
+      window.open(`https://wa.me/?text=${text}`, '_blank');
+      extraShareCount = Math.min(10, extraShareCount + 1);
+      document.getElementById('share-progress-text').textContent = `${extraShareCount} / 10 partages`;
+      document.getElementById('share-progress-fill').style.width = (extraShareCount * 10) + '%';
+      if (extraShareCount >= 10) {
+        setExtraChance(true);
+        closeExtraModal();
+        alert('🎉 Félicitations ! Vous avez obtenu une 6ᵉ chance. Rejouez maintenant.');
+        navigateTo('screen-accueil');
+      }
+    });
+    document.getElementById('btn-extra-chance').addEventListener('click', openExtraModal);
 
     // ==================== POPUNDER ====================
     let popunderCount = 0;
@@ -897,7 +886,7 @@
         return;
       }
       if (!getProfile()) {
-        openModal();
+        openInscription();
         return;
       }
       if (!incrementAttempts()) {
@@ -928,11 +917,17 @@
 
       addHistory({ attempt: currentAttempt, time: elapsed, points, date: new Date().toISOString() });
       triggerPopunder();
+
+      // ★ PARTIES RESTANTES ★
+      const max = hasExtraChance() ? MAX_ATTEMPTS + 1 : MAX_ATTEMPTS;
+      const rest = max - getAttempts();
+      document.getElementById('remaining-attempts').textContent = rest + ' tentative(s) restante(s)';
+
       navigateTo('screen-defaite');
       document.getElementById('indice-overlay').classList.add('hidden');
     }
 
-    // Explosion avec feedback
+    // Explosion
     document.getElementById('game-grid').addEventListener('click', function(e) {
       const cell = e.target.closest('.tree-cell');
       if (!cell || cell.classList.contains('exploding')) return;
@@ -965,17 +960,16 @@
         return;
       }
       if (!getProfile()) {
-        openModal();
+        openInscription();
         return;
       }
-      // Afficher le tutoriel avant de lancer le jeu
       showTutorial();
     });
 
     document.getElementById('abandon-btn').addEventListener('click', () => abandonGame(false));
     document.getElementById('retry-btn').addEventListener('click', () => {
       if (isGameLocked()) navigateTo('screen-gameover');
-      else startGame(); // rejoue directement (pas de tutoriel répété)
+      else startGame();
     });
     document.getElementById('share-defeat-btn').addEventListener('click', () => {
       const text = encodeURIComponent(`🇭🇹 J'ai échoué à Jwenn Drapo a ! Peux-tu faire mieux ? Joue ici : ${SITE_URL}`);
@@ -989,8 +983,7 @@
       const mode = document.getElementById('mode-input').value;
       if (!pseudo || !tel) { alert('Veuillez remplir tous les champs'); return; }
       saveProfile(pseudo, tel, mode);
-      closeModal();
-      // Après inscription, on montre le tutoriel puis le jeu
+      closeInscription();
       showTutorial();
     });
 
@@ -1002,8 +995,9 @@
         document.getElementById('profil-tel').textContent = profile.tel;
         document.getElementById('profil-mode').textContent = profile.mode;
         const attempts = getAttempts();
-        document.getElementById('profil-parties').textContent = attempts;
-        const rest = MAX_ATTEMPTS - attempts;
+        const max = hasExtraChance() ? MAX_ATTEMPTS + 1 : MAX_ATTEMPTS;
+        document.getElementById('profil-parties').textContent = attempts + '/' + max;
+        const rest = max - attempts;
         document.getElementById('profil-restantes').textContent = rest > 0 ? `${rest} tentative(s) restante(s)` : 'Plus de tentatives';
         const history = loadHistory();
         const list = document.getElementById('history-list');
@@ -1018,7 +1012,7 @@
     }
     document.querySelector('[data-screen="screen-profil"]').addEventListener('click', updateProfilScreen);
 
-    // ==================== INITIALISATION ====================
+    // Initialisation
     if (isGameLocked()) {
       navigateTo('screen-gameover');
     } else {
@@ -1027,4 +1021,4 @@
   })();
 </script>
 </body>
-    </html>
+</html>
